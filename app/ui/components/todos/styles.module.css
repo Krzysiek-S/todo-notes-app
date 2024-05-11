@@ -1,0 +1,165 @@
+.box {
+    position: relative;
+    transform-style: preserve-3d;
+  }
+
+  .box::before {
+    content: "";
+    position: absolute; 
+    inset: -15px;
+    /* background: radial-gradient(circle, rgba(131, 40, 0, 1) 0%, rgba(255, 163, 132, 1) 80%); */
+    background: conic-gradient(
+  from 90deg at -40% 30%, 
+  #ffb096, 
+  #FFA384, 
+  #FFA384
+);
+    filter: blur(20px);
+    transform: translate3d(0px,-1px,-1px);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .box1 {
+    position: relative;
+    transform-style: preserve-3d;
+  }
+
+  .box1::before {
+    content: "";
+    position: absolute; 
+    inset: -15px;
+    /* background: radial-gradient(circle, rgba(131, 40, 0, 1) 0%, rgba(255, 163, 132, 1) 80%); */
+    background: conic-gradient(
+  from 90deg at -40% 30%, 
+  #febea9, 
+  #FFA384, 
+  #FFA384
+);
+    filter: blur(20px);
+    transform: translate3d(0px,-1px,-1px);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .box2 {
+    position: relative;
+    transform-style: preserve-3d;
+  }
+
+  .box2::before {
+    content: "";
+    position: absolute; 
+    inset: -15px;
+    /* background: radial-gradient(circle, rgba(131, 40, 0, 1) 0%, rgba(255, 163, 132, 1) 80%); */
+    background: conic-gradient(
+  from 90deg at -40% 30%, 
+  #68c4a8, 
+  #5cb399, 
+  #5cb399
+);
+    filter: blur(20px);
+    transform: translate3d(0px,-1px,-1px);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .box3 {
+    position: relative;
+    transform-style: preserve-3d;
+  }
+
+  .box3::before {
+    content: "";
+    position: absolute; 
+    inset: -11px;
+    /* background: radial-gradient(circle, rgba(131, 40, 0, 1) 0%, rgba(255, 163, 132, 1) 80%); */
+    background: conic-gradient(
+  from 90deg at -40% 30%, 
+  #ffa182, 
+  #744638, 
+  #a64e31
+);
+    filter: blur(15px);
+    transform: translate3d(0px,-1px,-1px);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .box4 {
+    position: relative;
+    transform-style: preserve-3d;
+  }
+
+  .box4::before {
+    content: "";
+    position: absolute; 
+    inset: -15px;
+    /* background: radial-gradient(circle, rgba(131, 40, 0, 1) 0%, rgba(255, 163, 132, 1) 80%); */
+    background: conic-gradient(
+  from 90deg at -40% 30%, 
+  #68c4a8, 
+  #5cb399, 
+  #387a67
+);
+    filter: blur(15px);
+    transform: translate3d(0px,-1px,-1px);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .buttonpushed {
+    position: relative;
+    transform-style: preserve-3d;
+  }
+
+  .buttonpushed::before {
+    content: "";
+    position: absolute; 
+    inset: -15px;
+    /* background: radial-gradient(circle, rgba(131, 40, 0, 1) 0%, rgba(255, 163, 132, 1) 80%); */
+    background: conic-gradient(
+  from 90deg at -40% 30%, 
+  #68c4a8, 
+  #5cb399, 
+  #387a67
+);
+    filter: blur(15px);
+    transform: translate3d(0px,-1px,-1px);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .buttonpushed1 {
+    background-color: #645f5d;
+    width: 3px
+  }
+
+  .overflow {
+    overflow-x: hidden;
+  }
+  .overflowMarginActive {
+    margin-right: -15px
+  }
+  .overflowMarginDefault {
+    margin-right: 0px
+  }
+
+  .texture {
+    background:
+radial-gradient(black 5%, transparent 2%) 0 0,
+radial-gradient(black 10%, transparent 2%) 8px 8px,
+radial-gradient(rgba(255,255,255,.1) 15%, transparent 10%) 0 1px,
+radial-gradient(rgba(255,255,255,.1) 15%, transparent 10%) 8px 9px;
+background-color:transparent;
+background-size: 8px 12px;
+  }
+
+.lightSource {
+  
+  background: linear-gradient(to bottom, rgba(255, 234, 220, 0.8) 1%, 
+  rgba(255, 238, 225, 0.1) 5%,
+   rgba(85, 44, 12, 0.4) 90%, 
+   rgba(107, 61, 24, 0.7) 100%);
+   mix-blend-mode: overlay;
+}
