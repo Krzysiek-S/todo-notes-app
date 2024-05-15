@@ -6,7 +6,6 @@ export default function NavBar() {
   return (
     <>
       <SignedIn>
-        <Todos />
         <UserButton />
       </SignedIn>
     </>
