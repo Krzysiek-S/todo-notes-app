@@ -21,11 +21,13 @@ export default function Page() {
   const [isOn, setIsOn] = useState(false);
   const [sounds, setSounds] = useState<{
     lampTurn: HTMLAudioElement | null;
+    lampTurnOff: HTMLAudioElement | null;
     lightSwitch: HTMLAudioElement | null;
     shiba1: HTMLAudioElement | null;
     shiba2: HTMLAudioElement | null;
   }>({
     lampTurn: null,
+    lampTurnOff: null,
     lightSwitch: null,
     shiba1: null,
     shiba2: null,
@@ -35,16 +37,21 @@ export default function Page() {
     setSounds((prevSounds) => ({
       ...prevSounds,
       lampTurn: new Audio("/switch/sounds/turnlamp1.mp3"),
+      lampTurnOff: new Audio("/switch/sounds/turnofflamp1.mp3"),
+      lightSwitch: new Audio("/switch/sounds/switch-light.mp3"),
+      shiba1: new Audio("/shiba/1.mp3"),
+      shiba2: new Audio("/shiba/2.mp3"),
     }));
   }, []);
 
   useEffect(() => {
-    if (sounds.lampTurn) {
+    if (sounds.lampTurn && sounds.lampTurnOff) {
       sounds.lampTurn.volume = 0.9;
       if (isOn) {
         sounds.lampTurn.play();
       } else {
         // Reset the audio to the beginning if lamp is turned off
+        sounds.lampTurnOff.play();
         sounds.lampTurn.pause();
         sounds.lampTurn.currentTime = 0;
       }
