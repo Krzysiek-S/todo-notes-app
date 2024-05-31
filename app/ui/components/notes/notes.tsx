@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, ChangeEvent, useEffect } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 import {
   postTodo,
   getTodos,
@@ -9,9 +9,7 @@ import {
   updateTodo,
 } from "../../../utils/requests";
 import { Note } from "@/app/lib/types";
-
 import Draggable from "react-draggable";
-
 import styles from "./styles.module.css";
 import NotesList from "./notes-list";
 
@@ -25,21 +23,24 @@ const Notes: React.FC<IsColored> = ({ isColored }) => {
   const [inputText, setInputText] = useState<string>("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [error, setError] = useState<string>("");
-  const { userId, getToken } = useAuth();
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const token = await getToken({ template: "supabase" });
-        const todosData = await getTodos({ userId, token });
-        setNotes(todosData);
+        const token = session?.accessToken;
+        const userId = session?.user?.id;
+        if (token && userId) {
+          const todosData = await getTodos({ userId, token });
+          setNotes(todosData);
+        }
       } catch (error: any) {
         console.error("Error fetching todos:", error.message);
       }
     };
 
     fetchNotes();
-  }, [userId, getToken]);
+  }, [session]);
 
   const handleAddTodo = async () => {
     try {
@@ -47,20 +48,21 @@ const Notes: React.FC<IsColored> = ({ isColored }) => {
         setError("Please enter a task");
         return;
       }
-      const token = await getToken({ template: "supabase" });
-      await postTodo({
-        userId,
-        token,
-        todoText: inputText.trim(),
-      });
-
-      setNotes((prevTodos) => [
-        ...prevTodos,
-        { id: Date.now(), todo: inputText.trim() },
-      ]);
-      setInputText("");
-      setError("");
-
+      const token = session?.accessToken;
+      const userId = session?.user?.id;
+      if (token && userId) {
+        await postTodo({
+          userId,
+          token,
+          todoText: inputText.trim(),
+        });
+        setNotes((prevTodos) => [
+          ...prevTodos,
+          { id: Date.now(), todo: inputText.trim() },
+        ]);
+        setInputText("");
+        setError("");
+      }
       if (inputRef.current) {
         inputRef.current.focus();
       }
@@ -71,13 +73,16 @@ const Notes: React.FC<IsColored> = ({ isColored }) => {
 
   const handleDeleteTodo = async (id: number) => {
     try {
-      const token = await getToken({ template: "supabase" });
-      await deleteTodo({
-        userId,
-        token,
-        todoId: id,
-      });
-      setNotes((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+      const token = session?.accessToken;
+      const userId = session?.user?.id;
+      if (token && userId) {
+        await deleteTodo({
+          userId,
+          token,
+          todoId: id,
+        });
+        setNotes((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+      }
     } catch (error: any) {
       console.error("Error deleting todo:", error.message);
     }
@@ -85,25 +90,21 @@ const Notes: React.FC<IsColored> = ({ isColored }) => {
 
   const handleEditTodo = async (id: number, text: string) => {
     try {
-      const token = await getToken({ template: "supabase" });
-      const updatedTodos = await updateTodo({
-        userId,
-        token,
-        todoId: id,
-        updatedTodo: { todo: text },
-      });
-
-      const updatedTodo = updatedTodos
-        ? updatedTodos.find((todo) => todo.id === id)
-        : null;
-
-      setNotes((prevTodos) =>
-        prevTodos.map((todo) =>
-          todo.id === id
-            ? { ...todo, todo: updatedTodo ? updatedTodo.todo : text }
-            : todo
-        )
-      );
+      const token = session?.accessToken;
+      const userId = session?.user?.id;
+      if (token && userId) {
+        const updatedTodos = await updateTodo({
+          userId,
+          token,
+          todoId: id,
+          updatedTodo: { todo: text },
+        });
+        setNotes((prevTodos) =>
+          prevTodos.map((todo) =>
+            todo.id === id ? { ...todo, todo: text } : todo
+          )
+        );
+      }
     } catch (error: any) {
       console.error("Error updating todo:", error.message);
     }
@@ -121,24 +122,7 @@ const Notes: React.FC<IsColored> = ({ isColored }) => {
   };
 
   return (
-    <div
-      // className={`${
-      //   isColored ? "border border-[#5cb399]" : "border border-[#E98E70]"
-      // } text-center rounded-2xl p-[20px]`}
-      className={`text-center rounded-2xl p-[20px]`}
-    >
-      {/* <textarea
-          rows={8}
-          cols={30}
-          placeholder="Type a note..."
-          ref={inputRef}
-          value={inputText}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-        ></textarea>
-        <div className="note-footer">
-          <small>200 remaining</small>
-        </div> */}
+    <div className={`text-center rounded-2xl p-[20px]`}>
       <NotesList
         notes={notes}
         onDelete={handleDeleteTodo}
