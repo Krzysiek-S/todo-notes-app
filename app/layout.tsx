@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
+import { SessionProvider } from "next-auth/react";
 
 import "./globals.css";
 
@@ -17,10 +17,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <SessionProvider>
       <html lang="en">
         <body className={`${roboto.className}`}>{children}</body>
       </html>
-    </ClerkProvider>
+    </SessionProvider>
   );
 }

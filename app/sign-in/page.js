@@ -1,11 +1,14 @@
-import { SignIn } from "@clerk/nextjs";
-
-const signIn = () => {
+import { signIn } from "@/auth.ts"
+ 
+export function SignIn() {
   return (
-    <div>
-      <SignIn />
-    </div>
-  );
-};
-
-export default signIn;
+    <form
+      action={async () => {
+        "use server"
+        await signIn("discord")
+      }}
+    >
+      <button type="submit">Signin with Discord</button>
+    </form>
+  )
+} 

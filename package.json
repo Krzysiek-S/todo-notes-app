@@ -9,13 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^4.31.1",
     "@react-three/drei": "^9.106.0",
     "@react-three/fiber": "^8.16.6",
     "@supabase/supabase-js": "^2.39.1",
     "@vercel/postgres": "^0.5.1",
     "framer-motion": "^10.18.0",
     "next": "^14.2.3",
+    "next-auth": "^4.24.7",
     "pg": "^8.11.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
