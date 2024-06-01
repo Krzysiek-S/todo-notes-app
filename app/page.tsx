@@ -160,7 +160,7 @@ export default function Page() {
         ) : (
           <>
             Not signed in <br />
-            <button onClick={() => signIn()}>Sign in</button>
+            <button onClick={() => signIn("discord")}>Sign in</button>
             <motion.button
               onClick={() => signIn()}
               className="rounded-full h-[75px] px-3 py-0.5 bg-secondary"
