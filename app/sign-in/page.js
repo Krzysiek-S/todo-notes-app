@@ -1,4 +1,4 @@
-import { signIn } from "@/auth.ts"
+import { signIn } from "next-auth/react";
  
 export function SignIn() {
   return (
