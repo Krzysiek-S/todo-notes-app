@@ -1,6 +1,6 @@
 import { signOut } from "next-auth/react";
  
-export function SignIn() {
+export default function SignIn() {
   return (
     <form
       action={async () => {
