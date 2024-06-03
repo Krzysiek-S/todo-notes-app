@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
-import { SessionProvider } from "next-auth/react";
 
 import "./globals.css";
 
@@ -17,10 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <SessionProvider>
-      <html lang="en">
-        <body className={`${roboto.className}`}>{children}</body>
-      </html>
-    </SessionProvider>
+    <html lang="en">
+      <body className={`${roboto.className}`}>{children}</body>
+    </html>
   );
 }
