@@ -15,7 +15,7 @@ import Draggable from "react-draggable";
 import styles from "./ui/components/todos/styles.module.css";
 
 export default function Page() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [isColored, setColored] = useState(false);
   const [draggingMain, setDraggingMain] = useState(false);
   const [isDashboardChange, setIsDashboardChange] = useState(false);
@@ -51,13 +51,12 @@ export default function Page() {
       if (isOn) {
         sounds.lampTurn.play();
       } else {
-        // Reset the audio to the beginning if lamp is turned off
         sounds.lampTurnOff.play();
         sounds.lampTurn.pause();
         sounds.lampTurn.currentTime = 0;
       }
     }
-  }, [isOn, sounds.lampTurn]);
+  }, [isOn, sounds.lampTurn, sounds.lampTurnOff]);
 
   const handleButtonClick = () => {
     setColored((prevState) => !prevState);
@@ -107,10 +106,10 @@ export default function Page() {
             } `}
           ></div>
 
-          {session ? (
+          {status === "authenticated" ? (
             <>
               <div className="flex justify-between items-center relative z-10">
-                Signed in as {session.user.email} <br />
+                Signed in as {session?.user?.email} <br />
                 <div className="p-[20px]">
                   <button onClick={() => signOut()}>Sign out</button>
                 </div>

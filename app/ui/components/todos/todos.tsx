@@ -10,7 +10,6 @@ import {
 } from "../../../utils/requests";
 import { Todo } from "@/app/lib/types";
 
-import Draggable from "react-draggable";
 import { motion } from "framer-motion";
 
 import styles from "./styles.module.css";
@@ -20,7 +19,7 @@ import { DefaultSession } from "next-auth";
 
 // Declare module to extend the default types
 declare module "next-auth" {
-  interface Session extends DefaultSession {
+  interface Session {
     accessToken: string;
     refreshToken: string;
     user: {
@@ -42,24 +41,26 @@ const Todos: React.FC<IsColored> = ({ isColored }) => {
   const [inputText, setInputText] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string>("");
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    const fetchTodos = async () => {
-      try {
-        const token = session?.accessToken;
-        const userId = session?.user?.id;
-        if (token && userId) {
-          const todosData = await getTodos({ userId, token });
-          setTodos(todosData);
+    if (status === "authenticated") {
+      const fetchTodos = async () => {
+        try {
+          const token = session?.accessToken;
+          const userId = session?.user?.id;
+          if (token && userId) {
+            const todosData = await getTodos({ userId, token });
+            setTodos(todosData);
+          }
+        } catch (error: any) {
+          console.error("Error fetching todos:", error.message);
         }
-      } catch (error: any) {
-        console.error("Error fetching todos:", error.message);
-      }
-    };
+      };
 
-    fetchTodos();
-  }, [session]);
+      fetchTodos();
+    }
+  }, [session, status]);
 
   const handleAddTodo = async () => {
     try {
@@ -113,7 +114,7 @@ const Todos: React.FC<IsColored> = ({ isColored }) => {
       const token = session?.accessToken;
       const userId = session?.user?.id;
       if (token && userId) {
-        const updatedTodos = await updateTodo({
+        await updateTodo({
           userId,
           token,
           todoId: id,

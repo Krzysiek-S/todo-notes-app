@@ -12,7 +12,21 @@ import { Note } from "@/app/lib/types";
 import Draggable from "react-draggable";
 import styles from "./styles.module.css";
 import NotesList from "./notes-list";
+import { DefaultSession } from "next-auth";
 
+declare module "next-auth" {
+  interface Session {
+    accessToken: string;
+    refreshToken: string;
+    user: {
+      id: string;
+    } & DefaultSession["user"];
+  }
+
+  interface User {
+    id: string;
+  }
+}
 interface IsColored {
   isColored: boolean;
   className: string;
@@ -23,24 +37,26 @@ const Notes: React.FC<IsColored> = ({ isColored }) => {
   const [inputText, setInputText] = useState<string>("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [error, setError] = useState<string>("");
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    const fetchNotes = async () => {
-      try {
-        const token = session?.accessToken;
-        const userId = session?.user?.id;
-        if (token && userId) {
-          const todosData = await getTodos({ userId, token });
-          setNotes(todosData);
+    if (status === "authenticated") {
+      const fetchNotes = async () => {
+        try {
+          const token = session?.accessToken;
+          const userId = session?.user?.id;
+          if (token && userId) {
+            const todosData = await getTodos({ userId, token });
+            setNotes(todosData);
+          }
+        } catch (error: any) {
+          console.error("Error fetching todos:", error.message);
         }
-      } catch (error: any) {
-        console.error("Error fetching todos:", error.message);
-      }
-    };
+      };
 
-    fetchNotes();
-  }, [session]);
+      fetchNotes();
+    }
+  }, [session, status]);
 
   const handleAddTodo = async () => {
     try {
