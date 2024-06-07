@@ -40,7 +40,7 @@ const Notes: React.FC<IsColored> = ({ isColored }) => {
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (status === "authenticated") {
+    if (status === "authenticated" && session) {
       const fetchNotes = async () => {
         try {
           const token = session?.accessToken;
