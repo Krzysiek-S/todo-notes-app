@@ -1,10 +1,8 @@
-import NextAuth from "next-auth";
-import { NextAuthOptions } from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import Discord from "next-auth/providers/discord";
 import { SupabaseAdapter } from "@next-auth/supabase-adapter";
 import { JWT } from "next-auth/jwt";
 import { Session } from "next-auth";
-
 import { DefaultSession } from "next-auth";
 
 // Declare module to extend the default types
@@ -28,7 +26,7 @@ declare module "next-auth/jwt" {
   }
 }
 
-const options: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     Discord({
       clientId: process.env.AUTH_DISCORD_CLIENT_ID as string,
@@ -55,4 +53,4 @@ const options: NextAuthOptions = {
   },
 };
 
-export default NextAuth(options);
+export default NextAuth(authOptions);
