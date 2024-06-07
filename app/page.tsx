@@ -1,7 +1,8 @@
+// app/page.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSession, signIn, signOut, SessionProvider } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { motion } from "framer-motion";
 import { SwitchLight } from "@/app/ui/components/switchlight/switch-light";
 import Todos from "@/app/ui/components/todos/todos";
@@ -13,15 +14,9 @@ import Light from "./ui/components/light";
 import Draggable from "react-draggable";
 
 import styles from "./ui/components/todos/styles.module.css";
-import { getSession } from "@/app/lib/session"; // Ścieżka do Twojego pliku session.ts
-import { GetServerSidePropsContext } from "next";
-import { Session } from "next-auth"; // Import typów z next-auth
+import ServerSessionProvider from "./ServerSessionProvider";
 
-interface PageProps {
-  serverSession: Session | null;
-}
-
-export default function Page({ serverSession }: PageProps) {
+export default function Page() {
   const { data: session, status } = useSession();
   const [isColored, setColored] = useState(false);
   const [draggingMain, setDraggingMain] = useState(false);
@@ -96,7 +91,7 @@ export default function Page({ serverSession }: PageProps) {
   };
 
   return (
-    <SessionProvider session={serverSession}>
+    <ServerSessionProvider>
       <div
         className={`${
           isColored
@@ -131,7 +126,7 @@ export default function Page({ serverSession }: PageProps) {
                   className={`${
                     isColored ? styles.box4 : styles.box3
                   } relative flex items-center border-[#494544] border-[2px] bg-[#6f6967]
-               w-[45px] h-[15px] rounded-full cursor-pointer`}
+            w-[45px] h-[15px] rounded-full cursor-pointer`}
                   onClick={handleSwitchLamp}
                 >
                   <input
@@ -179,15 +174,6 @@ export default function Page({ serverSession }: PageProps) {
           </>
         )}
       </div>
-    </SessionProvider>
+    </ServerSessionProvider>
   );
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getSession(context);
-  return {
-    props: {
-      serverSession: session,
-    },
-  };
 }
