@@ -1,7 +1,8 @@
+// app/page.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn, signOut, SessionProvider } from "next-auth/react";
 import { motion } from "framer-motion";
 import { SwitchLight } from "@/app/ui/components/switchlight/switch-light";
 import Todos from "@/app/ui/components/todos/todos";
@@ -11,6 +12,7 @@ import { Shiba } from "@/app/ui/shiba";
 import { Main } from "./ui/components/main";
 import Light from "./ui/components/light";
 import Draggable from "react-draggable";
+
 import styles from "./ui/components/todos/styles.module.css";
 
 export default function Page() {
@@ -88,84 +90,89 @@ export default function Page() {
   };
 
   return (
-    <div
-      className={`${
-        isColored
-          ? "bg-[#5cb399] scrollback-second"
-          : "bg-[#FFA384] scrollback-first"
-      } h-[100vh] w-[100%] overflow-x-hidden relative`}
-    >
+    <SessionProvider>
       <div
         className={`${
-          !isOn
-            ? ""
-            : `${styles.lightSource} fixed inset-0 z-50 pointer-events-none`
-        } `}
-      ></div>
+          isColored
+            ? "bg-[#5cb399] scrollback-second"
+            : "bg-[#FFA384] scrollback-first"
+        } h-[100vh] w-[100%] overflow-x-hidden relative`}
+      >
+        <div
+          className={`${
+            !isOn
+              ? ""
+              : `${styles.lightSource} fixed inset-0 z-50 pointer-events-none`
+          } `}
+        ></div>
 
-      {status === "authenticated" ? (
-        <>
-          <div className="flex justify-between items-center relative z-10">
-            Signed in as {session?.user?.email} <br />
-            <div className="p-[20px]">
-              <button onClick={() => signOut()}>Sign out</button>
-            </div>
-            <Button handleButtonClick={handleButtonClick} />
-          </div>
-          <Shiba
-            handleMouseHover={handleMouseHover}
-            handleShibaClick={handleShibaClick}
-          />
-          <div className="relative z-10">
-            <div className="flex items-center ml-6">
-              <div
-                className={`${
-                  isColored ? styles.box4 : styles.box3
-                } relative flex items-center border-[#494544] border-[2px] bg-[#6f6967]
-                  w-[45px] h-[15px] rounded-full cursor-pointer`}
-                onClick={handleSwitchLamp}
-              >
-                <input
-                  type="checkbox"
-                  id="lampSwitch"
-                  className="absolute opacity-0"
-                  checked={isOn}
-                  readOnly
-                />
-                <label
-                  htmlFor="lampSwitch"
-                  className="block bg-[#645f5d] cursor-pointer border-[#494544] border-[2px] w-[23px] h-[23px]  rounded-full transition-transform"
-                  style={{
-                    transform: isOn ? "translateX(80%)" : "translateX(0)",
-                  }}
-                  onClick={handleSwitchLamp}
-                ></label>
+        {status === "authenticated" ? (
+          <>
+            <div className="flex justify-between items-center relative z-10">
+              Signed in as {session?.user?.email} <br />
+              <div className="p-[20px]">
+                <button onClick={() => signOut()}>Sign out</button>
               </div>
-              <button
-                className={`${
-                  isColored ? styles.box4 : styles.box3
-                } ml-[10%] w-[23px] h-[23px] active:border-[3.5px] border border-[#494544] border-[2px] bg-[#645f5d] rounded-full`}
-                onMouseDown={handleButtonDashboardClick}
-              ></button>
+              <Button handleButtonClick={handleButtonClick} />
             </div>
-            <Main isColored={isColored} isDashboardChange={isDashboardChange} />
-          </div>
-        </>
-      ) : (
-        <>
-          Not signed in <br />
-          <button onClick={() => signIn("discord")}>Sign in</button>
-          <motion.button
-            onClick={() => signIn()}
-            className="rounded-full h-[75px] px-3 py-0.5 bg-secondary"
-            whileHover={{ scale: 1.2 }}
-            whileTap={{ scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-          >
-            Sign in
-          </motion.button>
-        </>
-      )}
-    </div>
+            <Shiba
+              handleMouseHover={handleMouseHover}
+              handleShibaClick={handleShibaClick}
+            />
+            <div className="relative z-10">
+              <div className="flex items-center ml-6">
+                <div
+                  className={`${
+                    isColored ? styles.box4 : styles.box3
+                  } relative flex items-center border-[#494544] border-[2px] bg-[#6f6967]
+            w-[45px] h-[15px] rounded-full cursor-pointer`}
+                  onClick={handleSwitchLamp}
+                >
+                  <input
+                    type="checkbox"
+                    id="lampSwitch"
+                    className="absolute opacity-0"
+                    checked={isOn}
+                    readOnly
+                  />
+                  <label
+                    htmlFor="lampSwitch"
+                    className="block bg-[#645f5d] cursor-pointer border-[#494544] border-[2px] w-[23px] h-[23px]  rounded-full transition-transform"
+                    style={{
+                      transform: isOn ? "translateX(80%)" : "translateX(0)",
+                    }}
+                    onClick={handleSwitchLamp}
+                  ></label>
+                </div>
+                <button
+                  className={`${
+                    isColored ? styles.box4 : styles.box3
+                  } ml-[10%] w-[23px] h-[23px] active:border-[3.5px] border border-[#494544] border-[2px] bg-[#645f5d] rounded-full`}
+                  onMouseDown={handleButtonDashboardClick}
+                ></button>
+              </div>
+              <Main
+                isColored={isColored}
+                isDashboardChange={isDashboardChange}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            Not signed in <br />
+            <button onClick={() => signIn("discord")}>Sign in</button>
+            <motion.button
+              onClick={() => signIn()}
+              className="rounded-full h-[75px] px-3 py-0.5 bg-secondary"
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            >
+              Sign in
+            </motion.button>
+          </>
+        )}
+      </div>
+    </SessionProvider>
   );
 }

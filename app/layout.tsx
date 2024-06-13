@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
-import ServerSessionProvider from "./ServerSessionProvider";
+
 import "./globals.css";
 
 const roboto = Lexend({ weight: "400", subsets: ["latin"] });
@@ -17,9 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${roboto.className}`}>
-        <ServerSessionProvider>{children}</ServerSessionProvider>
-      </body>
+      <body className={`${roboto.className}`}>{children}</body>
     </html>
   );
 }
