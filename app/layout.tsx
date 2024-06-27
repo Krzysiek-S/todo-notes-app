@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
+import ClientLayout from "./client-layout";
 
 import "./globals.css";
 
@@ -17,7 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${roboto.className}`}>{children}</body>
+      <body className={`${roboto.className}`}>
+        <ClientLayout>{children}</ClientLayout>
+      </body>
     </html>
   );
 }

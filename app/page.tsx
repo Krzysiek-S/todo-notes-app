@@ -98,7 +98,7 @@ export default function Page() {
       } h-[100vh] w-[100%] overflow-x-hidden relative`}
     >
       {status === "authenticated" ? (
-        <SessionProvider>
+        <>
           <div className="flex justify-between items-center relative z-10">
             Signed in as {session?.user?.email} <br />
             <div className="p-[20px]">
@@ -144,7 +144,7 @@ export default function Page() {
             </div>
             <Main isColored={isColored} isDashboardChange={isDashboardChange} />
           </div>
-        </SessionProvider>
+        </>
       ) : (
         <>
           Not signed in <br />
