@@ -8,7 +8,7 @@ import { checkSubscriptionStatus } from '../../../utils/checkSubscriptionStatus'
 // Definicja interfejsu sesji, rozszerzająca SessionBase
 
 
-export const AuthOptions: NextAuthOptions = {
+const AuthOptions: NextAuthOptions = {
   providers: [
     GitHubProvider({
       clientId: process.env.AUTH_GITHUB_CLIENT_ID as string,
