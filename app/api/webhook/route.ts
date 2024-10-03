@@ -3,7 +3,7 @@ import { stripe } from '../../lib/stripe';
 import { CreateSupabaseClient } from '../../utils/supabaseClient';
 
 export const runtime = 'nodejs'; // lub 'edge'
-export const bodyParser = false; // Stripe wymaga wyłączonego bodyParsera
+// Stripe wymaga wyłączonego bodyParsera
 
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
