@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '../../lib/stripe';
 import { getServerSession } from "next-auth";
-import { AuthOptions } from "@/app/api/auth/[...nextauth]/route";
+import { AuthOptions } from '@/app/lib/auth';
 import { CreateSupabaseClient } from '../../utils/supabaseClient';
 
 export async function POST(req: NextRequest) {
