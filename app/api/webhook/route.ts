@@ -1,23 +1,17 @@
-// api/webhook/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '../../lib/stripe';
 import { CreateSupabaseClient } from '../../utils/supabaseClient';
 
-export const config = {
-  api: {
-    bodyParser: false, // Stripe wymaga wyłączonego bodyParsera
-  },
-};
+export const runtime = 'nodejs'; // lub 'edge'
+export const bodyParser = false; // Stripe wymaga wyłączonego bodyParsera
 
 export async function POST(req: NextRequest) {
-  // Użycie ReadableStream do pobrania surowego ciała żądania
-  const rawBody = await req.text(); 
+  const rawBody = await req.text();
   const sig = req.headers.get('stripe-signature');
 
   let event;
 
   try {
-    // Weryfikacja sygnatury webhooka
     event = stripe.webhooks.constructEvent(
       rawBody,
       sig!,
@@ -30,7 +24,6 @@ export async function POST(req: NextRequest) {
 
   console.log(`Received Stripe event: ${event.type}`);
 
-  // Obsługa różnych typów zdarzeń Stripe
   switch (event.type) {
     case 'customer.subscription.updated':
     case 'customer.subscription.deleted': {
@@ -40,10 +33,7 @@ export async function POST(req: NextRequest) {
 
       console.log(`Subscription event: ${event.type} for customer: ${customerId} with status: ${subscriptionStatus}`);
 
-      // Inicjalizacja Supabase
       const supabase = CreateSupabaseClient();
-
-      // Aktualizacja statusu subskrypcji w bazie danych
       const { error } = await supabase
         .from('users')
         .update({ subscription_status: subscriptionStatus })
@@ -63,11 +53,9 @@ export async function POST(req: NextRequest) {
       console.log(`Invoice payment failed for customer: ${customerId}`);
 
       const supabase = CreateSupabaseClient();
-
-      // Pobieranie adresu e-mail użytkownika
       const { data: user, error: userError } = await supabase
         .from('users')
-        .select('email, name') // Zakładając, że firstName jest w tabeli users
+        .select('email, name')
         .eq('stripecustomerid', customerId)
         .single();
 
@@ -76,7 +64,6 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Failed to fetch user details' }, { status: 500 });
       }
 
-      // Wywołanie endpointu API Next.js do wysyłania e-maila
       const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_VERCEL_URL}/api/send`, {
         method: 'POST',
         headers: {
@@ -84,7 +71,7 @@ export async function POST(req: NextRequest) {
         },
         body: JSON.stringify({
           email: user.email,
-          firstName: user.name, // Dopasowanie do twojego szablonu e-mail
+          firstName: user.name,
         }),
       });
 
@@ -94,7 +81,6 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Failed to send email notification' }, { status: 500 });
       }
 
-      // Aktualizacja statusu subskrypcji na "payment_failed"
       const { error: updateError } = await supabase
         .from('users')
         .update({ subscription_status: 'payment_failed' })
@@ -111,6 +97,5 @@ export async function POST(req: NextRequest) {
       console.log(`Unhandled event type ${event.type}`);
   }
 
-  // Odpowiedź 200 OK
   return NextResponse.json({ received: true });
 }
