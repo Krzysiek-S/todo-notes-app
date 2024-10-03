@@ -8,19 +8,40 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { Mesh, MeshStandardMaterial } from "three";
 
 interface SwitchLightProps {
-  handleButtonClick: () => void;
+  handleButtonColored: () => void;
 }
 
-export const Button: React.FC<SwitchLightProps> = ({ handleButtonClick }) => {
+export const Button: React.FC<SwitchLightProps> = ({ handleButtonColored }) => {
   const [isPressed, setPressed] = useState(false);
+  const [isHolding, setIsHolding] = useState(false);
+  const holdTimer = useRef<NodeJS.Timeout | null>(null);
   // const handleClick = () => {
   //   setPressed((prevState) => !prevState);
   //   console.log("BUTTON: ", isPressed);
   // };
+
+  const handleMouseDown = () => {
+    setIsHolding(false);
+    holdTimer.current = setTimeout(() => {
+      setIsHolding(true);
+    }, 200); // Czas, po którym uznajesz, że użytkownik przytrzymuje przycisk
+  };
+
+  const handleMouseUp = () => {
+    if (holdTimer.current) {
+      clearTimeout(holdTimer.current);
+    }
+    if (!isHolding) {
+      handleButtonColored();
+    }
+    setIsHolding(false);
+  };
+
   return (
     <div
-      className="h-[80px] w-[100px] mr-[220px] cursor-pointer"
-      onClick={handleButtonClick}
+      className="h-[80px] w-[100px]  cursor-pointer"
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
     >
       <Canvas
         camera={{ position: [9, 0, 0], fov: 8 }}

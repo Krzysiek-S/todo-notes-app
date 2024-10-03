@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NoteItemProps } from "@/app/lib/types";
 import Draggable, { DraggableEvent, DraggableData } from "react-draggable";
-
 import styles from "./styles.module.css";
 
 const NoteItem: React.FC<NoteItemProps> = ({
@@ -9,6 +8,10 @@ const NoteItem: React.FC<NoteItemProps> = ({
   onDelete,
   editTodo,
   isColored,
+  activeNoteId,
+  setActiveNote,
+  noteOrder,
+  getZIndex,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedText, setEditedText] = useState(note.todo);
@@ -17,7 +20,6 @@ const NoteItem: React.FC<NoteItemProps> = ({
   useEffect(() => {
     const fetchNotePosition = () => {
       try {
-        // Sprawdź, czy w localStorage istnieje zapisane położenie notatki
         const storedPosition = localStorage.getItem(`note_${note.id}_position`);
         if (storedPosition) {
           const { x, y } = JSON.parse(storedPosition);
@@ -34,13 +36,10 @@ const NoteItem: React.FC<NoteItemProps> = ({
   const handlePositionChange = (data: DraggableData) => {
     try {
       const { x, y } = data;
-      // Zapisz położenie x i y notatki w localStorage
       localStorage.setItem(
         `note_${note.id}_position`,
         JSON.stringify({ x, y })
       );
-
-      // Aktualizuj położenie notatki na ekranie
       setPosition({ x, y });
     } catch (error: any) {
       console.error("Error updating note position:", error.message);
@@ -53,7 +52,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
 
   const handleSaveButtonClick = () => {
     editTodo(note.id, editedText);
-    setIsEditing((prevIsEditing) => !prevIsEditing);
+    setIsEditing(false);
   };
 
   const handleCancelEdit = () => {
@@ -61,11 +60,24 @@ const NoteItem: React.FC<NoteItemProps> = ({
     setIsEditing(false);
   };
 
+  const handleDragStart = () => {
+    setActiveNote(note.id);
+  };
+
+  const handleClick = () => {
+    setActiveNote(note.id);
+  };
+
+  const handleDragStop = (e: DraggableEvent, data: DraggableData) => {
+    handlePositionChange(data);
+  };
+
   return (
     <Draggable
       position={position}
       defaultPosition={{ x: position.x, y: position.y }}
-      onStop={(e, data) => handlePositionChange(data)}
+      onStart={handleDragStart}
+      onStop={handleDragStop}
     >
       <div
         className={`${
@@ -73,6 +85,8 @@ const NoteItem: React.FC<NoteItemProps> = ({
             ? "border border-[#54a38c] bg-[#5cb399]"
             : "border border-[#E98E70] bg-[#FFA384]"
         } handle shadow-2xl rounded-md p-4 flex flex-col justify-between items-center`}
+        style={{ zIndex: getZIndex(note.id) }}
+        onClick={handleClick}
       >
         {isEditing ? (
           <textarea
@@ -114,7 +128,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
             </button>
             <button
               onClick={handleEditButtonClick}
-              className={` ${
+              className={`${
                 isColored
                   ? "border border-none bg-[#9b6754]"
                   : "border border-[#E98E70] bg-[#9f4016]"
@@ -126,12 +140,6 @@ const NoteItem: React.FC<NoteItemProps> = ({
         )}
       </div>
     </Draggable>
-    // <div className="rounded-md p-4 min-h-[170px] border border-red-700">
-    //   fsdfd
-    //   <div className="noteFooter">
-    //     <small>13/04/2222</small>
-    //   </div>
-    // </div>
   );
 };
 

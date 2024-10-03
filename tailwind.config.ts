@@ -8,6 +8,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+
+        'sm': {'min': '320px', 'max': '470px'},
+      },
       colors: {
         primary: "#74BDCB",
         background: "#FFA384",

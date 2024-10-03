@@ -9,28 +9,9 @@ import {
   updateTodo,
 } from "../../../utils/requests";
 import { Todo } from "@/app/lib/types";
-
 import { motion } from "framer-motion";
-
 import styles from "./styles.module.css";
 import TodoList from "./todo-list";
-
-import { DefaultSession } from "next-auth";
-
-// Declare module to extend the default types
-declare module "next-auth" {
-  interface Session {
-    accessToken: string;
-    refreshToken: string;
-    user: {
-      id: string;
-    } & DefaultSession["user"];
-  }
-
-  interface User {
-    id: string;
-  }
-}
 
 interface IsColored {
   isColored: boolean;
@@ -44,20 +25,22 @@ const Todos: React.FC<IsColored> = ({ isColored }) => {
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (status === "authenticated") {
+    if (session?.supabaseAccessToken) {
       const fetchTodos = async () => {
         try {
-          const token = session?.accessToken;
-          const userId = session?.user?.id;
+          console.log("Session data during fetchTodos:", session);
+          const token = session.supabaseAccessToken;
+          const userId = session.user.id;
+          console.log("USER:", userId);
           if (token && userId) {
             const todosData = await getTodos({ userId, token });
             setTodos(todosData);
+            console.log("DATA:", todosData);
           }
         } catch (error: any) {
           console.error("Error fetching todos:", error.message);
         }
       };
-
       fetchTodos();
     }
   }, [session, status]);
@@ -68,34 +51,53 @@ const Todos: React.FC<IsColored> = ({ isColored }) => {
         setError("Please enter a task");
         return;
       }
-      const token = session?.accessToken;
-      const userId = session?.user?.id;
-      if (token && userId) {
-        await postTodo({
-          userId,
-          token,
-          todoText: inputText.trim(),
-        });
 
-        setTodos((prevTodos) => [
-          ...prevTodos,
-          { id: Date.now(), todo: inputText.trim() },
-        ]);
-        setInputText("");
-        setError("");
+      console.log("Session data:", session);
+      console.log("Session status:", status);
+
+      if (session) {
+        const token = session.supabaseAccessToken;
+        const userId = session.user.id;
+        console.log("Token:", token);
+        console.log("UserId:", userId);
+
+        if (token && userId) {
+          const response = await postTodo({
+            userId,
+            token,
+            todoText: inputText.trim(),
+          });
+          console.log("Response from postTodo:", response);
+
+          if (response) {
+            setTodos((prevTodos) => [
+              ...prevTodos,
+              { id: response[0].id, todo: inputText.trim() },
+            ]);
+            setInputText("");
+            setError("");
+          } else {
+            setError("Failed to add todo");
+          }
+        } else {
+          setError("Token or UserId is missing");
+        }
+      } else {
+        setError("User is not authenticated");
       }
+
       if (inputRef.current) {
         inputRef.current.focus();
       }
-    } catch (error: any) {
-      console.error("Error adding todo:", error.message);
+    } catch (error) {
+      console.error("Error adding todo:", (error as Error).message);
     }
   };
 
   const handleDeleteTodo = async (id: number) => {
     try {
-      const token = session?.accessToken;
-      const userId = session?.user?.id;
+      const token = session?.supabaseAccessToken;
+      const userId = session?.user.id;
       if (token && userId) {
         await deleteTodo({
           userId,
@@ -111,7 +113,7 @@ const Todos: React.FC<IsColored> = ({ isColored }) => {
 
   const handleEditTodo = async (id: number, text: string) => {
     try {
-      const token = session?.accessToken;
+      const token = session?.supabaseAccessToken;
       const userId = session?.user?.id;
       if (token && userId) {
         await updateTodo({
@@ -150,7 +152,7 @@ const Todos: React.FC<IsColored> = ({ isColored }) => {
           isColored
             ? "border border-[#5cb399] bg-[#5cb399]"
             : "border border-[#E98E70] bg-[#FFA384]"
-        } flex flex-col text-center justify-between shadow-2xl rounded-3xl max-h-[480px] p-[50px]`}
+        } flex flex-col text-center justify-between shadow-2xl rounded-3xl max-h-[480px] p-[40px]`}
       >
         <input
           ref={inputRef}
@@ -160,7 +162,7 @@ const Todos: React.FC<IsColored> = ({ isColored }) => {
           onKeyDown={handleKeyDown}
           placeholder="add a task"
           required
-          className={`${styles.box} border-r border-l rounded-lg border-primary focus:outline-none w-[20rem] bg-[#E5FBFF] min-h-[40px] px-3`}
+          className={`${styles.box} no-drag sm:mb-[10px] border-r border-l rounded-lg border-primary focus:outline-none w-[100%] bg-[#E5FBFF] min-h-[40px] px-3 sm:w-[100%]`}
         />
         {error && (
           <motion.p
@@ -197,9 +199,9 @@ const Todos: React.FC<IsColored> = ({ isColored }) => {
             } font-bold border rounded-full w-[7rem] h-[2.7rem] text-white hover:bg-[#A42E39] active:bg-activeCTA`}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
           >
-            Add Me!
+            Add task
           </motion.button>
         </div>
       </div>

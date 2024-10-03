@@ -17,14 +17,16 @@ import { motion } from "framer-motion";
 export function Shiba({ handleMouseHover, handleShibaClick }: any) {
   return (
     <motion.div
-      className="cursor-pointer mr-[43%] ml-[43%] h-[15%]"
+      className="cursor-pointer mr-[45%] ml-[45%] h-[13%]"
       whileHover={{ scale: 1.2 }}
       whileTap={{ scale: 0.9 }}
       transition={{ type: "spring", stiffness: 400, damping: 17 }}
       onMouseEnter={handleMouseHover}
       onMouseDown={handleShibaClick}
     >
-      <Canvas camera={{ position: [0, 0, 4], fov: 13 }}>
+      <Canvas camera={{ position: [0, 0, 3.5], fov: 13 }}>
+        <ambientLight intensity={2.7} />
+        {/* <directionalLight position={[5, 5, 5]} intensity={1.8} /> */}
         <OrbitControls />
         <MeshComponent />
       </Canvas>
@@ -33,7 +35,7 @@ export function Shiba({ handleMouseHover, handleShibaClick }: any) {
 }
 
 function MeshComponent() {
-  const fileUrl = "/shiba/scene.gltf";
+  const fileUrl = "/shiba/dog1.glb";
   const mesh = useRef<Mesh>(null!);
   const gltf = useLoader(GLTFLoader, fileUrl);
 
@@ -45,7 +47,7 @@ function MeshComponent() {
   });
 
   return (
-    <mesh ref={mesh} scale={[0.5, 0.5, 0.5]} position={[0, 0.2, 0]}>
+    <mesh ref={mesh} scale={[0.45, 0.45, 0.45]} position={[0, 0.02, 0]}>
       <primitive object={gltf.scene} />
     </mesh>
   );

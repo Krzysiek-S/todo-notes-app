@@ -11,6 +11,8 @@ export const AddNote = ({
   handleAddTodo,
   isColored,
 }: any) => {
+  const charLimit = 200;
+  const charLeft = charLimit - inputText.length;
   return (
     <Draggable>
       <div
@@ -22,18 +24,28 @@ export const AddNote = ({
       >
         <textarea
           className="border-none resize-none"
-          rows={8}
+          rows={7}
           cols={10}
           placeholder="Type to add a note..."
           ref={inputRef}
           value={inputText}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
+          maxLength={200}
         ></textarea>
 
-        <div className="">
-          <small>200 remaining...</small>
-          <button onClick={handleAddTodo}>save</button>
+        <div className="flex justify-start items-center pt-4">
+          <span className="mr-[10px]">{charLeft} left </span>
+          <button
+            onClick={handleAddTodo}
+            className={`${
+              isColored
+                ? "border border-none bg-[#9b6754]"
+                : "border border-[#E98E70] bg-[#9f4016]"
+            } w-[4.5rem] h-[3rem] border border-l rounded-lg text-white hover:bg-[#A42E39] active:bg-activeCTA`}
+          >
+            save
+          </button>
         </div>
         {error && (
           <motion.p

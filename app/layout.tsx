@@ -11,16 +11,23 @@ export const metadata: Metadata = {
   description: "simple todo app",
 };
 
+interface LayoutProps {
+  children: React.ReactNode;
+  session: any;
+  pageProps: any;
+}
+
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+  session,
+  pageProps,
+}: LayoutProps) {
   return (
-    <html lang="en">
-      <body className={`${roboto.className}`}>
-        <ClientLayout>{children}</ClientLayout>
-      </body>
-    </html>
+    <ClientLayout>
+      <html lang="en">
+        <head />
+        <body>{children}</body>
+      </html>
+    </ClientLayout>
   );
 }

@@ -25,14 +25,14 @@ const TodoItem: React.FC<TodoItemProps> = ({
   };
 
   return (
-    <div className="flex justify-between items-center ">
-      <span className="pl-2 flex-grow">
+    <div className="flex justify-between items-center sm:flex-col">
+      <span className="sm:mb-[13px] sm:mt-[13px] pl-2 flex-grow">
         {isEditing ? (
           <input
             type="text"
             value={editedText}
             onChange={(e) => setEditedText(e.target.value)}
-            className="border border-none rounded-l-lg px-2 focus:outline-none text-black"
+            className="no-drag bg-primary text-center border border-none rounded-l-lg px-2 focus:outline-none"
           />
         ) : (
           editedText
@@ -42,26 +42,34 @@ const TodoItem: React.FC<TodoItemProps> = ({
         <div className="flex items-center">
           <button
             onClick={handleSaveButtonClick}
-            className={`w-[4.5rem] h-[3rem] hover:bg-activeCTA border border-l border-[#E98E70] rounded-l-lg`}
+            className={`${
+              isColored
+                ? "bg-[#62bca1] border-[#539d87] hover:bg-[#56a990]"
+                : "bg-[#fe9775] border-[#E98E70] hover:bg-background"
+            } w-[4.5rem] h-[3rem] border border-l rounded-l-lg`}
           >
             Save
           </button>
           <button
             onClick={handleCancelEdit}
-            className={`w-[4.5rem] h-[3rem] bg-background hover:bg-activeCTA border border-l border-[#E98E70] rounded-r-lg`}
+            className={`${
+              isColored
+                ? "bg-[#62bca1] border-[#539d87] hover:bg-[#56a990]"
+                : "bg-[#fe9775] border-[#E98E70] hover:bg-background"
+            } w-[4.5rem] h-[3rem] border border-l rounded-r-lg`}
           >
             Cancel
           </button>
         </div>
       ) : (
-        <div className="flex items-center">
+        <div className="sm:w-[100%] flex items-center">
           <button
             onClick={() => onDelete(todo.id)}
             className={`${
               isColored
                 ? "bg-[#5cb399] border-[#539d87] hover:bg-[#56a990]"
                 : "bg-background border-[#E98E70] hover:bg-activeCTA"
-            } w-[4.5rem] h-[3rem] border border-l rounded-l-lg`}
+            } sm:w-[100%] w-[4.5rem] h-[3rem] border border-l rounded-l-lg`}
           >
             Delete
           </button>
@@ -71,7 +79,7 @@ const TodoItem: React.FC<TodoItemProps> = ({
               isColored
                 ? "bg-[#5cb399] border-[#539d87] hover:bg-[#56a990]"
                 : "bg-background border-[#E98E70] hover:bg-activeCTA"
-            } w-[4.5rem] h-[3rem] border border-l rounded-r-lg`}
+            } sm:w-[100%] w-[4.5rem] h-[3rem] border border-l rounded-r-lg`}
           >
             Edit
           </button>

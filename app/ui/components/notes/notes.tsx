@@ -14,25 +14,22 @@ import styles from "./styles.module.css";
 import NotesList from "./notes-list";
 import { DefaultSession } from "next-auth";
 
-declare module "next-auth" {
-  interface Session {
-    accessToken: string;
-    refreshToken: string;
-    user: {
-      id: string;
-    } & DefaultSession["user"];
-  }
-
-  interface User {
-    id: string;
-  }
-}
 interface IsColored {
   isColored: boolean;
-  className: string;
+  activeNoteId: number | null;
+  setActiveNote: (id: number) => void;
+  noteOrder: number[];
+  setNoteOrder: (order: number[] | ((prevOrder: number[]) => number[])) => void;
+  getZIndex: (id: number) => number;
 }
-
-const Notes: React.FC<IsColored> = ({ isColored }) => {
+const Notes: React.FC<IsColored> = ({
+  isColored,
+  activeNoteId,
+  setActiveNote,
+  noteOrder,
+  setNoteOrder,
+  getZIndex,
+}) => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [inputText, setInputText] = useState<string>("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -40,10 +37,10 @@ const Notes: React.FC<IsColored> = ({ isColored }) => {
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (status === "authenticated" && session) {
+    if (session?.supabaseAccessToken) {
       const fetchNotes = async () => {
         try {
-          const token = session?.accessToken;
+          const token = session?.supabaseAccessToken;
           const userId = session?.user?.id;
           if (token && userId) {
             const todosData = await getTodos({ userId, token });
@@ -64,7 +61,7 @@ const Notes: React.FC<IsColored> = ({ isColored }) => {
         setError("Please enter a task");
         return;
       }
-      const token = session?.accessToken;
+      const token = session?.supabaseAccessToken;
       const userId = session?.user?.id;
       if (token && userId) {
         await postTodo({
@@ -89,7 +86,7 @@ const Notes: React.FC<IsColored> = ({ isColored }) => {
 
   const handleDeleteTodo = async (id: number) => {
     try {
-      const token = session?.accessToken;
+      const token = session?.supabaseAccessToken;
       const userId = session?.user?.id;
       if (token && userId) {
         await deleteTodo({
@@ -106,7 +103,7 @@ const Notes: React.FC<IsColored> = ({ isColored }) => {
 
   const handleEditTodo = async (id: number, text: string) => {
     try {
-      const token = session?.accessToken;
+      const token = session?.supabaseAccessToken;
       const userId = session?.user?.id;
       if (token && userId) {
         const updatedTodos = await updateTodo({
@@ -150,6 +147,11 @@ const Notes: React.FC<IsColored> = ({ isColored }) => {
         handleKeyDown={handleKeyDown}
         error={error}
         handleAddTodo={handleAddTodo}
+        activeNoteId={activeNoteId}
+        setActiveNote={setActiveNote}
+        noteOrder={noteOrder}
+        setNoteOrder={setNoteOrder}
+        getZIndex={getZIndex}
       />
     </div>
   );

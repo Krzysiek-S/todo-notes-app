@@ -18,9 +18,14 @@ const NotesList: React.FC<NotesListProps> = ({
   handleKeyDown,
   error,
   handleAddTodo,
+  activeNoteId,
+  setActiveNote,
+  noteOrder,
+  setNoteOrder,
+  getZIndex,
 }) => {
   return (
-    <div className="grid auto-rows-fr sm:grid-cols-2 md:grid-cols-4 gap-7">
+    <div className=" grid auto-rows-fr sm:grid-cols-2 md:grid-cols-4 gap-7">
       {notes.map((note) => (
         <NoteItem
           key={note.id}
@@ -28,6 +33,11 @@ const NotesList: React.FC<NotesListProps> = ({
           onDelete={onDelete}
           editTodo={editTodo}
           isColored={isColored}
+          activeNoteId={activeNoteId}
+          setActiveNote={setActiveNote}
+          noteOrder={noteOrder}
+          setNoteOrder={setNoteOrder}
+          getZIndex={getZIndex}
         />
       ))}
       <AddNote

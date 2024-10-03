@@ -1,26 +1,23 @@
-// app/page.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useSession, signIn, signOut, SessionProvider } from "next-auth/react";
+import React, { useState, useEffect, useRef } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { motion } from "framer-motion";
-import { SwitchLight } from "@/app/ui/components/switchlight/switch-light";
-import Todos from "@/app/ui/components/todos/todos";
-import Notes from "./ui/components/notes/notes";
 import { Button } from "@/app/ui/button";
 import { Shiba } from "@/app/ui/shiba";
 import { Main } from "./ui/components/main";
-import Light from "./ui/components/light";
-import Draggable from "react-draggable";
-
 import styles from "./ui/components/todos/styles.module.css";
+import SubscriptionPage from "./subscription/page";
 
 export default function Page() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [isColored, setColored] = useState(false);
   const [draggingMain, setDraggingMain] = useState(false);
   const [isDashboardChange, setIsDashboardChange] = useState(false);
+  const [isKanban, setIsKanban] = useState(false);
+  const [activeComponent, setActiveComponent] = useState("Todos");
   const [isOn, setIsOn] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false); // Dodana zmienna stanu do sprawdzania subskrypcji
   const [sounds, setSounds] = useState<{
     lampTurn: HTMLAudioElement | null;
     lampTurnOff: HTMLAudioElement | null;
@@ -35,6 +32,17 @@ export default function Page() {
     shiba2: null,
   });
 
+  // Pobranie statusu subskrypcji z backendu
+  useEffect(() => {
+    async function fetchSubscriptionStatus() {
+      const res = await fetch("/api/subscription/status");
+      const { isSubscribed } = await res.json();
+      setIsSubscribed(isSubscribed);
+    }
+
+    fetchSubscriptionStatus();
+  }, []);
+
   useEffect(() => {
     setSounds((prevSounds) => ({
       ...prevSounds,
@@ -48,7 +56,7 @@ export default function Page() {
 
   useEffect(() => {
     if (sounds.lampTurn && sounds.lampTurnOff) {
-      sounds.lampTurn.volume = 0.9;
+      sounds.lampTurn.volume = 0.6;
       if (isOn) {
         sounds.lampTurn.play();
       } else {
@@ -59,11 +67,17 @@ export default function Page() {
     }
   }, [isOn, sounds.lampTurn, sounds.lampTurnOff]);
 
-  const handleButtonClick = () => {
+  const handleButtonColored = () => {
     setColored((prevState) => !prevState);
     const audio = new Audio("/switch/sounds/light-sound.mp3");
     audio.play();
     console.log("COLOR: ", isColored);
+  };
+
+  const handleButtonClick = (component: any) => {
+    setActiveComponent(component);
+    const audio = new Audio("/switch/sounds/switch-light.mp3");
+    audio.play();
   };
 
   const handleButtonDashboardClick = () => {
@@ -71,6 +85,10 @@ export default function Page() {
     const audio = new Audio("/switch/sounds/switch-light.mp3");
     audio.play();
     console.log("MUSIC: ", isColored);
+  };
+
+  const handleKanbanToggle = () => {
+    setIsKanban((prevState) => !prevState); // Toggle between Kanban and Todos
   };
 
   const handleMouseHover = () => {
@@ -87,6 +105,7 @@ export default function Page() {
 
   const handleSwitchLamp = () => {
     setIsOn((prevIsOn) => !prevIsOn);
+    console.log("SWITCH:", isOn);
   };
 
   return (
@@ -97,60 +116,107 @@ export default function Page() {
           : "bg-[#FFA384] scrollback-first"
       } h-[100vh] w-[100%] overflow-x-hidden relative`}
     >
-      {status === "authenticated" ? (
-        <>
-          <div className="flex justify-between items-center relative z-10">
-            Signed in as {session?.user?.email} <br />
-            <div className="p-[20px]">
-              <button onClick={() => signOut()}>Sign out</button>
-            </div>
-            <Button handleButtonClick={handleButtonClick} />
-          </div>
-          <Shiba
-            handleMouseHover={handleMouseHover}
-            handleShibaClick={handleShibaClick}
-          />
-          <div className="relative z-10">
-            <div className="flex items-center ml-6">
-              <div
-                className={`${
-                  isColored ? styles.box4 : styles.box3
-                } relative flex items-center border-[#494544] border-[2px] bg-[#6f6967]
-            w-[45px] h-[15px] rounded-full cursor-pointer`}
-                onClick={handleSwitchLamp}
+      {session ? (
+        !isSubscribed ? (
+          <>
+            {/* Content for subscribed users */}
+            <div
+              className={`${
+                !isOn
+                  ? ""
+                  : `${styles.lightSource} fixed inset-0 z-50 pointer-events-none`
+              } `}
+            ></div>
+            <div className="flex justify-around items-center relative z-10">
+              <motion.button
+                onClick={() => signOut()}
+                className={` ${
+                  isColored
+                    ? "border border-none bg-[#6f6967]"
+                    : "border border-[#E98E70] bg-[#6f6967]"
+                } font-bold border rounded-full w-[5rem] h-[2.3rem] text-white text-[13px] p-[5px] mt-[14px] hover:bg-[#A42E39] active:bg-activeCTA`}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
-                <input
-                  type="checkbox"
-                  id="lampSwitch"
-                  className="absolute opacity-0"
-                  checked={isOn}
-                  readOnly
-                />
-                <label
-                  htmlFor="lampSwitch"
-                  className="block bg-[#645f5d] cursor-pointer border-[#494544] border-[2px] w-[23px] h-[23px]  rounded-full transition-transform"
-                  style={{
-                    transform: isOn ? "translateX(80%)" : "translateX(0)",
-                  }}
-                  onClick={handleSwitchLamp}
-                ></label>
-              </div>
-              <button
-                className={`${
-                  isColored ? styles.box4 : styles.box3
-                } ml-[10%] w-[23px] h-[23px] active:border-[3.5px] border border-[#494544] border-[2px] bg-[#645f5d] rounded-full`}
-                onMouseDown={handleButtonDashboardClick}
-              ></button>
+                Sign Out
+              </motion.button>
+              <span className="text-white">Welcome, {session?.user?.name}</span>
+              <Button handleButtonColored={handleButtonColored} />
             </div>
-            <Main isColored={isColored} isDashboardChange={isDashboardChange} />
+            <Shiba
+              handleMouseHover={handleMouseHover}
+              handleShibaClick={handleShibaClick}
+            />
+            <div className="relative z-10">
+              <div className="flex items-center ml-6 mb-[8px]">
+                <div
+                  className={`${
+                    isColored ? styles.box4 : styles.box3
+                  } relative flex items-center border-[#494544] border-[2px] bg-[#6f6967]
+                w-[45px] h-[15px] rounded-full cursor-pointer`}
+                  onClick={handleSwitchLamp}
+                >
+                  <input
+                    type="checkbox"
+                    id="lampSwitch"
+                    className="absolute opacity-0"
+                    checked={isOn}
+                    readOnly
+                  />
+                  <label
+                    htmlFor="lampSwitch"
+                    className="block bg-[#645f5d] cursor-pointer border-[#494544] border-[2px] w-[23px] h-[23px]  rounded-full transition-transform"
+                    style={{
+                      transform: isOn ? "translateX(80%)" : "translateX(0)",
+                    }}
+                    onClick={handleSwitchLamp}
+                  ></label>
+                </div>
+                <div className="flex justify-around ml-[6rem] w-[15%]">
+                  <button
+                    className={`${
+                      isColored
+                        ? (styles.box4, "bg-[#74BDCB]")
+                        : (styles.box3, "bg-[#74BDCB]")
+                    } ml-[10%] w-[23px] h-[23px] active:border-[3.5px] border border-[#494544] border-[2px] bg-[#645f5d] rounded-full`}
+                    onMouseDown={() => handleButtonClick("Todos")}
+                  ></button>
+                  <button
+                    className={`${
+                      isColored
+                        ? (styles.box4, "bg-[#fbd8b0]")
+                        : (styles.box3, "bg-[#fbd8b0]")
+                    } ml-[10%] w-[23px] h-[23px] active:border-[3.5px] border border-[#494544] border-[2px] bg-[#645f5d] rounded-full`}
+                    onMouseDown={() => handleButtonClick("Notes")}
+                  ></button>
+                  <button
+                    className={`${
+                      isColored
+                        ? (styles.box4, "bg-[#c85250]")
+                        : (styles.box3, "bg-[#c85250]")
+                    } ml-[10%] w-[23px] h-[23px] active:border-[3.5px] border border-[#494544] border-[2px] bg-[#645f5d] rounded-full`}
+                    onClick={() => handleButtonClick("Kanban")} // Toggle Kanban view
+                  ></button>
+                </div>
+              </div>
+              <Main
+                isColored={isColored}
+                isDashboardChange={isDashboardChange}
+                isKanban={isKanban}
+                activeComponent={activeComponent}
+              />
+            </div>
+          </>
+        ) : (
+          <div>
+            <SubscriptionPage />
           </div>
-        </>
+        )
       ) : (
-        <>
-          Not signed in <br />
-          <button onClick={() => signIn("discord")}>Sign in</button>
+        <div className=" h-[100%] border flex justify-center items-center">
           <motion.button
-            onClick={() => signIn()}
+            onClick={() => signIn("github")}
             className="rounded-full h-[75px] px-3 py-0.5 bg-secondary"
             whileHover={{ scale: 1.2 }}
             whileTap={{ scale: 0.9 }}
@@ -158,7 +224,7 @@ export default function Page() {
           >
             Sign in
           </motion.button>
-        </>
+        </div>
       )}
     </div>
   );

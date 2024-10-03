@@ -1,13 +1,19 @@
 import { createClient } from "@supabase/supabase-js";
 
-export const supabaseClient = async (supabaseToken) => {
-  const supabase = createClient(
+export const CreateSupabaseClient = (supabaseAccessToken) => {
+  if (!supabaseAccessToken) {
+    throw new Error("No Supabase access token provided");
+  }
+
+  return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_KEY,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {
-      global: { headers: { Authorization: `Bearer ${supabaseToken}` } },
+      global: {
+        headers: {
+          Authorization: `Bearer ${supabaseAccessToken}`,
+        },
+      },
     }
   );
-
-  return supabase;
 };
