@@ -13,15 +13,15 @@ export const metadata: Metadata = {
 
 interface LayoutProps {
   children: React.ReactNode;
-  session: any;
-  pageProps: any;
+  // session: any;
+  // pageProps: any;
 }
 
 export default function RootLayout({
   children,
-  session,
-  pageProps,
-}: LayoutProps) {
+}: // session,
+// pageProps,
+LayoutProps) {
   return (
     <ClientLayout>
       <html lang="en">
