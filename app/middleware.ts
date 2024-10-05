@@ -2,7 +2,7 @@
 // import { NextResponse } from 'next/server';
 // import { NextRequest } from 'next/server';
 // import { getServerSession } from 'next-auth';
-// import { AuthOptions } from "@/app/api/auth/[...nextauth]/route";
+// import { AuthOptions } from './lib/auth';
 // import { CreateSupabaseClient } from './utils/supabaseClient';
 
 // export async function middleware(req: NextRequest) {
