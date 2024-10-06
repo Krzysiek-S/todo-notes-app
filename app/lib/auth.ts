@@ -32,14 +32,14 @@ export const AuthOptions: NextAuthOptions = {
         }
         session.user.id = user.id;
   
-        if (session.supabaseAccessToken) {
-          const subscriptionStatus = await checkSubscriptionStatus(user.id, session.supabaseAccessToken);
-          session.user.subscription_status = subscriptionStatus || 'inactive';
-        } else {
-          // Obsłuż sytuację, gdy token nie jest dostępny (np. logowanie błędu)
-          console.error("Supabase access token is not available");
-          session.user.subscription_status = 'inactive';
-        }
+        // if (session.supabaseAccessToken) {
+        //   const subscriptionStatus = await checkSubscriptionStatus(user.id, session.supabaseAccessToken);
+        //   session.user.subscription_status = subscriptionStatus || 'inactive';
+        // } else {
+        //   // Obsłuż sytuację, gdy token nie jest dostępny (np. logowanie błędu)
+        //   console.error("Supabase access token is not available");
+        //   session.user.subscription_status = 'inactive';
+        // }
         return session
       },
     },
