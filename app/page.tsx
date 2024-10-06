@@ -117,7 +117,7 @@ export default function Page() {
       } h-[100vh] w-[100%] overflow-x-hidden relative`}
     >
       {session ? (
-        !isSubscribed ? (
+        isSubscribed ? (
           <>
             {/* Content for subscribed users */}
             <div
