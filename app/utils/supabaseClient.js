@@ -4,10 +4,12 @@ export const CreateSupabaseClient = (supabaseAccessToken) => {
   if (!supabaseAccessToken) {
     throw new Error("No Supabase access token provided");
   }
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
   return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       global: {
         headers: {
