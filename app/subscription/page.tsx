@@ -27,15 +27,18 @@ export default function SubscriptionPage() {
       }
 
       // Tworzenie sesji Checkout z ustawionym okresem próbnym w planie
-      const res = await fetch("/api/subscription", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          priceId: PRICE_ID,
-        }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_VERCEL_URL}/api/subscription`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            priceId: PRICE_ID,
+          }),
+        }
+      );
 
       if (!res.ok) {
         const errorResponse = await res.json();
