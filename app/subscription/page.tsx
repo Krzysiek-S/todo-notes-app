@@ -82,7 +82,7 @@ export default function SubscriptionPage() {
           while keeping things simple and distraction-free.
         </p>
 
-        <ul className="text-gray-700 mb-8">
+        <ul className="flex flex-col justify-center items-center text-gray-700 mb-8">
           <li className="mb-2">
             <div className="flex justify-center items-center">
               <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
@@ -91,7 +91,7 @@ export default function SubscriptionPage() {
             </div>
             <p>Stay focused with zero interruptions.</p>
           </li>
-          <div className="border border-gray-500 border-dotted w-[20px]"></div>
+          <div className="border border-gray-400 border-dotted w-[60px] mb-2"></div>
           <li className="mb-2">
             <div className="flex justify-center items-center">
               <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
@@ -102,7 +102,7 @@ export default function SubscriptionPage() {
               A clean, calming layout that lets you concentrate on what matters.
             </p>
           </li>
-          <div className="border border-gray-500 border-dotted"></div>
+          <div className="border border-gray-400 border-dotted w-[60px] mb-2"></div>
           <li className="mb-2">
             <div className="flex justify-center items-center">
               <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
@@ -114,7 +114,7 @@ export default function SubscriptionPage() {
               exciting new features.
             </p>
           </li>
-          <div className="border border-gray-500 border-dotted"></div>
+          <div className="border border-gray-400 border-dotted w-[60px] mb-2"></div>
           <li className="mb-2 flex justify-center items-center">
             <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
             <span className="font-semibold mr-2">Priority Support</span>
