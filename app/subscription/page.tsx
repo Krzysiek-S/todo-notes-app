@@ -83,14 +83,14 @@ export default function SubscriptionPage() {
         </p>
 
         <ul className="text-gray-700 mb-8">
-          <li className="mb-2 flex items-center justify-between">
+          <li className="mb-2">
             <div>
               <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
               <span className="font-semibold mr-2">Ad-Free Experience</span>
             </div>
             <p>Stay focused with zero interruptions.</p>
           </li>
-          <li className="mb-2 flex items-center justify-between">
+          <li className="mb-2">
             <div>
               <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
               <span className="font-semibold mr-2">Minimalist Design</span>
@@ -100,7 +100,7 @@ export default function SubscriptionPage() {
             </p>
           </li>
 
-          <li className="mb-2 flex items-center justify-between">
+          <li className="mb-2">
             <div>
               <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
               <span className="font-semibold mr-2">Ongoing Development</span>
