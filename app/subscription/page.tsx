@@ -70,8 +70,8 @@ export default function SubscriptionPage() {
   };
 
   return (
-    <div className="min-h-screen w-[700px] bg-gradient-to-r bg-[#FFE0AE] flex flex-col items-center justify-center p-6">
-      <div className="bg-[#ffebca] rounded-lg shadow-lg p-8 max-w-md w-full text-center">
+    <div className="min-h-screen bg-gradient-to-r bg-[#FFE0AE] flex flex-col items-center justify-center p-6">
+      <div className="bg-[#ffebca] rounded-lg shadow-lg p-8 max-w-lg w-full text-center">
         <h1 className="text-3xl font-bold mb-4 text-gray-800">
           Upgrade to Unlock More!
         </h1>
