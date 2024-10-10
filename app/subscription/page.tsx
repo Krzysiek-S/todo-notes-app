@@ -89,15 +89,13 @@ export default function SubscriptionPage() {
           </li>
           <li className="mb-2 flex items-center">
             <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
-            <span className="font-semibold mr-2">Minimalist Design</span>
-            <br />A clean, calming layout that lets you concentrate on what
-            matters.
+            <span className="font-semibold mr-2">Minimalist Design</span>A
+            clean, calming layout that lets you concentrate on what matters.
           </li>
 
           <li className="mb-2 flex items-center">
             <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
             <span className="font-semibold mr-2">Ongoing Development</span>
-            <br />
             Your subscription fuels future updates and improvements, bringing
             exciting new features.
           </li>
