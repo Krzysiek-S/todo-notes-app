@@ -91,7 +91,7 @@ export default function SubscriptionPage() {
             </div>
             <p>Stay focused with zero interruptions.</p>
           </li>
-          <div className="border border-gray-400 border-dotted w-[60px] mb-2"></div>
+          <div className="border border-gray-300 border-dotted w-[40px] mb-2"></div>
           <li className="mb-2">
             <div className="flex justify-center items-center">
               <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
@@ -102,7 +102,7 @@ export default function SubscriptionPage() {
               A clean, calming layout that lets you concentrate on what matters.
             </p>
           </li>
-          <div className="border border-gray-400 border-dotted w-[60px] mb-2"></div>
+          <div className="border border-gray-300 border-dotted w-[40px] mb-2"></div>
           <li className="mb-2">
             <div className="flex justify-center items-center">
               <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
@@ -114,7 +114,7 @@ export default function SubscriptionPage() {
               exciting new features.
             </p>
           </li>
-          <div className="border border-gray-400 border-dotted w-[60px] mb-2"></div>
+          <div className="border border-gray-300 border-dotted w-[40px] mb-2"></div>
           <li className="mb-2 flex justify-center items-center">
             <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
             <span className="font-semibold mr-2">Priority Support</span>
