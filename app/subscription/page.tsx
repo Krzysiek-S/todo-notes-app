@@ -86,19 +86,23 @@ export default function SubscriptionPage() {
             <li className="mb-2 flex items-center">
               <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
               <span className="font-semibold mr-2">Ad-Free Experience</span>
-              Stay focused with zero interruptions.
+              <p>Stay focused with zero interruptions.</p>
             </li>
             <li className="mb-2 flex items-center">
               <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
               <span className="font-semibold mr-2">Minimalist Design</span>A
-              clean, calming layout that lets you concentrate on what matters.
+              <p>
+                clean, calming layout that lets you concentrate on what matters.
+              </p>
             </li>
 
             <li className="mb-2 flex items-center">
               <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
               <span className="font-semibold mr-2">Ongoing Development</span>
-              Your subscription fuels future updates and improvements, bringing
-              exciting new features.
+              <p>
+                Your subscription fuels future updates and improvements,
+                bringing exciting new features.
+              </p>
             </li>
             <li className="mb-2 flex items-center">
               <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
