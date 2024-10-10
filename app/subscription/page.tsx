@@ -91,7 +91,7 @@ export default function SubscriptionPage() {
             </div>
             <p>Stay focused with zero interruptions.</p>
           </li>
-          <div className="border border-gray-500 border-dotted w-2"></div>
+          <div className="border border-gray-500 border-dotted w-[20px]"></div>
           <li className="mb-2">
             <div className="flex justify-center items-center">
               <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
