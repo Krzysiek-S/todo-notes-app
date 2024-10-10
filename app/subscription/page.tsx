@@ -73,27 +73,38 @@ export default function SubscriptionPage() {
     <div className="min-h-screen bg-gradient-to-r bg-[#FFE0AE] flex flex-col items-center justify-center p-6">
       <div className="bg-[#ffebca] rounded-lg shadow-lg p-8 max-w-md w-full text-center">
         <h1 className="text-3xl font-bold mb-4 text-gray-800">
-          Unlock Exclusive Features!
+          Upgrade to Unlock More!
         </h1>
         <p className="text-gray-600 mb-6">
-          Upgrade your experience with our premium subscription plan. Enjoy
-          unlimited access to all features, priority support, and much more!
+          Experience our to-do list app in its full potential with a premium
+          subscription. Enjoy a smooth, ad-free interface designed for comfort
+          and focus. With your support, we can continue enhancing features, all
+          while keeping things simple and distraction-free.
         </p>
         <ul className="text-left text-gray-700 mb-8">
           <li className="mb-2 flex items-center">
             <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
-            <span className="font-semibold mr-2">Unlimited Access</span> to all
-            features
+            <span className="font-semibold mr-2">Ad-Free Experience</span>
+            Stay focused with zero interruptions.
+          </li>
+          <li className="mb-2 flex items-center">
+            <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
+            <span className="font-semibold mr-2">Minimalist Design</span>
+            <br />A clean, calming layout that lets you concentrate on what
+            matters.
+          </li>
+
+          <li className="mb-2 flex items-center">
+            <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
+            <span className="font-semibold mr-2">Ongoing Development</span>
+            <br />
+            Your subscription fuels future updates and improvements, bringing
+            exciting new features.
           </li>
           <li className="mb-2 flex items-center">
             <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
             <span className="font-semibold mr-2">Priority Support</span> for any
             issues or questions
-          </li>
-          <li className="mb-2 flex items-center">
-            <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
-            <span className="font-semibold mr-2">Early Access</span> to new
-            updates and features
           </li>
         </ul>
         <button
