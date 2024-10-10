@@ -84,16 +84,18 @@ export default function SubscriptionPage() {
 
         <ul className="text-gray-700 mb-8">
           <li className="mb-2">
-            <div>
+            <div className="flex justify-center items-center">
               <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
               <span className="font-semibold mr-2">Ad-Free Experience</span>
+              <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
             </div>
             <p>Stay focused with zero interruptions.</p>
           </li>
           <li className="mb-2">
-            <div>
+            <div className="flex justify-center items-center">
               <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
               <span className="font-semibold mr-2">Minimalist Design</span>
+              <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
             </div>
             <p>
               A clean, calming layout that lets you concentrate on what matters.
@@ -101,19 +103,20 @@ export default function SubscriptionPage() {
           </li>
 
           <li className="mb-2">
-            <div>
+            <div className="flex justify-center items-center">
               <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
               <span className="font-semibold mr-2">Ongoing Development</span>
+              <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
             </div>
             <p>
               Your subscription fuels future updates and improvements, bringing
               exciting new features.
             </p>
           </li>
-          <li className="mb-2 flex items-center">
+          <li className="mb-2 flex justify-center items-center">
             <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
-            <span className="font-semibold mr-2">Priority Support</span> for any
-            issues or questions
+            <span className="font-semibold mr-2">Priority Support</span>
+            <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
           </li>
         </ul>
         <button
