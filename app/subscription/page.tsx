@@ -81,30 +81,32 @@ export default function SubscriptionPage() {
           and focus. With your support, we can continue enhancing features, all
           while keeping things simple and distraction-free.
         </p>
-        <ul className="text-left text-gray-700 mb-8">
-          <li className="mb-2 flex items-center">
-            <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
-            <span className="font-semibold mr-2">Ad-Free Experience</span>
-            Stay focused with zero interruptions.
-          </li>
-          <li className="mb-2 flex items-center">
-            <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
-            <span className="font-semibold mr-2">Minimalist Design</span>A
-            clean, calming layout that lets you concentrate on what matters.
-          </li>
+        <div className="">
+          <ul className="text-left text-gray-700 mb-8">
+            <li className="mb-2 flex items-center">
+              <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
+              <span className="font-semibold mr-2">Ad-Free Experience</span>
+              Stay focused with zero interruptions.
+            </li>
+            <li className="mb-2 flex items-center">
+              <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
+              <span className="font-semibold mr-2">Minimalist Design</span>A
+              clean, calming layout that lets you concentrate on what matters.
+            </li>
 
-          <li className="mb-2 flex items-center">
-            <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
-            <span className="font-semibold mr-2">Ongoing Development</span>
-            Your subscription fuels future updates and improvements, bringing
-            exciting new features.
-          </li>
-          <li className="mb-2 flex items-center">
-            <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
-            <span className="font-semibold mr-2">Priority Support</span> for any
-            issues or questions
-          </li>
-        </ul>
+            <li className="mb-2 flex items-center">
+              <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
+              <span className="font-semibold mr-2">Ongoing Development</span>
+              Your subscription fuels future updates and improvements, bringing
+              exciting new features.
+            </li>
+            <li className="mb-2 flex items-center">
+              <span className="inline-block w-4 h-4 mr-2 rounded-full bg-[#F76201]"></span>
+              <span className="font-semibold mr-2">Priority Support</span> for
+              any issues or questions
+            </li>
+          </ul>
+        </div>
         <button
           onClick={handleSubscribe}
           disabled={loading}
