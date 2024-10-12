@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     const supabase = CreateSupabaseClient(session.supabaseAccessToken);
     const { data, error } = await supabase
       .from('users')
-      .select('subscription_status, trial_end_date')
+      .select('subscription_status')
       .eq('id', session.user.id)
       .single();
 
@@ -23,10 +23,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch subscription status' }, { status: 500 });
     }
 
-    const isSubscribed = data.subscription_status === 'active';
-    const trialEndDate = data.trial_end_date || null;
-
-    return NextResponse.json({ isSubscribed, trialEndDate });
+    return NextResponse.json({ isSubscribed: data.subscription_status === 'active' });
   } catch (error) {
     console.error('Unexpected error fetching subscription status:', error);
     return NextResponse.json({ error: 'Unexpected error fetching subscription status' }, { status: 500 });
