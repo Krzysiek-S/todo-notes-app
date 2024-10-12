@@ -8,6 +8,7 @@ import { Shiba } from "@/app/ui/shiba";
 import { Main } from "./ui/components/main";
 import styles from "./ui/components/todos/styles.module.css";
 import SubscriptionPage from "./subscription/page";
+import SubscriptionControls from "./ui/components/SubscriptionControls";
 
 export default function Page() {
   const { data: session } = useSession();
@@ -17,7 +18,8 @@ export default function Page() {
   const [isKanban, setIsKanban] = useState(false);
   const [activeComponent, setActiveComponent] = useState("Todos");
   const [isOn, setIsOn] = useState(false);
-  const [isSubscribed, setIsSubscribed] = useState(false); // Dodana zmienna stanu do sprawdzania subskrypcji
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [trialEndDate, setTrialEndDate] = useState<Date | null>(null); // Dodana zmienna stanu do sprawdzania subskrypcji
   const [sounds, setSounds] = useState<{
     lampTurn: HTMLAudioElement | null;
     lampTurnOff: HTMLAudioElement | null;
@@ -36,8 +38,9 @@ export default function Page() {
   useEffect(() => {
     async function fetchSubscriptionStatus() {
       const res = await fetch("/api/subscription/status");
-      const { isSubscribed } = await res.json();
+      const { isSubscribed, trialEndDate } = await res.json();
       setIsSubscribed(isSubscribed);
+      setTrialEndDate(new Date(trialEndDate));
     }
 
     fetchSubscriptionStatus();
@@ -108,6 +111,8 @@ export default function Page() {
     console.log("SWITCH:", isOn);
   };
 
+  const currentDate = new Date();
+
   return (
     <div
       className={`${
@@ -117,7 +122,7 @@ export default function Page() {
       } h-[100vh] w-[100%] overflow-x-hidden relative`}
     >
       {session ? (
-        isSubscribed ? (
+        isSubscribed || (trialEndDate && trialEndDate > currentDate) ? (
           <>
             {/* Content for subscribed users */}
             <div
@@ -142,6 +147,7 @@ export default function Page() {
                 Sign Out
               </motion.button>
               <span className="text-white">Welcome, {session?.user?.name}</span>
+              <SubscriptionControls />
               <Button handleButtonColored={handleButtonColored} />
             </div>
             <Shiba

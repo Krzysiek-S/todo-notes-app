@@ -1,4 +1,3 @@
-// pages/api/cancel-subscription/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '../../lib/stripe';
 import { getServerSession } from 'next-auth';
@@ -15,34 +14,39 @@ export async function POST(req: NextRequest) {
   try {
     const supabase = CreateSupabaseClient(session.supabaseAccessToken);
 
-    // Pobierz użytkownika z Supabase, aby uzyskać subskrypcję
     const { data: user, error } = await supabase
       .from('users')
-      .select('stripesubscriptionid')
+      .select('subscription_id')
       .eq('id', session.user.id)
       .single();
 
-    if (error || !user || !user.stripesubscriptionid) {
-      return NextResponse.json({ error: 'Nie znaleziono subskrypcji' }, { status: 400 });
+    if (error || !user || !user.subscription_id) {
+      return NextResponse.json({ error: 'Subscription not found' }, { status: 400 });
     }
 
     // Anulowanie subskrypcji w Stripe
-    const deletedSubscription = await stripe.subscriptions.cancel(user.stripesubscriptionid);
+    await stripe.subscriptions.update(user.subscription_id, {
+      cancel_at_period_end: true,
+    });
 
-    // Zaktualizuj stan subskrypcji w bazie danych, aby odzwierciedlać, że została anulowana
+    // Aktualizacja statusu subskrypcji w bazie danych
     const { error: updateError } = await supabase
       .from('users')
-      .update({ subscription_status: 'canceled' }) // Dodajemy status anulowanej subskrypcji
+      .update({
+        subscription_status: 'canceled',
+        trial_end_date: null,
+        subscription_id: null,
+      })
       .eq('id', session.user.id);
 
     if (updateError) {
-      console.error('Error updating user subscription status:', updateError.message);
+      console.error('Error updating subscription status:', updateError.message);
       return NextResponse.json({ error: 'Failed to update subscription status' }, { status: 500 });
     }
 
-    return NextResponse.json({ message: 'Subskrypcja została anulowana', deletedSubscription });
+    return NextResponse.json({ message: 'Subscription canceled' });
   } catch (error: any) {
-    console.error('Error cancelling subscription:', error);
+    console.error('Error cancelling subscription:', error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
