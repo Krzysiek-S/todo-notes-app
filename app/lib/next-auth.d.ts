@@ -14,6 +14,8 @@ declare module "next-auth" {
       image?: string | null;
       stripeCustomerId?: string | null; 
       subscription_status?: string;
+      trialEndDate: Date | null;
+      subscriptionId: string | null
     } & DefaultSession["user"]
   }
 }

@@ -11,9 +11,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { priceId } = await req.json();
+  const { priceId, action } = await req.json();
 
-  if (!priceId) {
+  if (!priceId && action !== 'cancel') {
     return NextResponse.json({ error: 'Missing price ID' }, { status: 400 });
   }
 
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     console.log("USER:", session.user)
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('stripecustomerid')
+      .select('stripecustomerid, subscription_id')
       .eq('id', session.user.id)
       .single();
      
@@ -53,6 +53,29 @@ export async function POST(req: NextRequest) {
         console.error('Error updating user with Stripe customer ID:', updateError.message);
         return NextResponse.json({ error: 'Failed to update user data' }, { status: 500 });
       }
+    }
+
+    if (action === 'cancel') {
+      if (!user.subscription_id) {
+        return NextResponse.json({ error: 'No active subscription found' }, { status: 400 });
+      }
+
+      // Anulowanie subskrypcji w Stripe
+      await stripe.subscriptions.update(user.subscription_id, {
+        cancel_at_period_end: true,  // Anuluje subskrypcję po zakończeniu okresu rozliczeniowego
+      });
+
+      // Aktualizacja statusu subskrypcji w bazie danych
+      await supabase
+        .from('users')
+        .update({
+          subscription_status: 'canceled',
+          trial_end_date: null,
+          subscription_id: null
+        })
+        .eq('id', session.user.id);
+
+      return NextResponse.json({ message: 'Subscription canceled' });
     }
 
     // Tworzenie sesji Stripe Checkout

@@ -33,12 +33,20 @@ export const AuthOptions: NextAuthOptions = {
         session.user.id = user.id;
   
         if (session.supabaseAccessToken) {
-          const subscriptionStatus = await checkSubscriptionStatus(user.id, session.supabaseAccessToken);
+          const { subscriptionStatus, trialEndDate, subscriptionId } = await checkSubscriptionStatus(
+            user.id,
+            session.supabaseAccessToken
+          );
+
           session.user.subscription_status = subscriptionStatus || 'inactive';
+          session.user.trialEndDate = trialEndDate || null; // Upewnij się, że jest to w formacie Date lub null
+        session.user.subscriptionId = subscriptionId || null; 
         } else {
           // Obsłuż sytuację, gdy token nie jest dostępny (np. logowanie błędu)
           console.error("Supabase access token is not available");
           session.user.subscription_status = 'inactive';
+          session.user.trialEndDate = null;
+        session.user.subscriptionId = null;
         }
         return session
       },
