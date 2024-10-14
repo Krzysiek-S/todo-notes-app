@@ -3,7 +3,8 @@
 
 import React, { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
-import { signOut } from "next-auth/react";
+import { signOut, signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
@@ -13,6 +14,31 @@ const PRICE_ID = "price_1PrQfoHB4zYbZOwNYiBOi7i6"; // Twój price_id z okresami 
 
 export default function SubscriptionPage() {
   const [loading, setLoading] = useState(false);
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const startTrial = async () => {
+    if (!session) {
+      signIn(); // Najpierw zaloguj użytkownika, jeśli nie jest zalogowany
+      return;
+    }
+
+    // Wywołanie API do rozpoczęcia okresu próbnego bez przekierowania do Stripe
+    const res = await fetch("/api/subscription/start-trial", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId: session.user.id }),
+    });
+
+    if (res.ok) {
+      alert("5-dniowy okres próbny rozpoczęty!"); // Możesz zastąpić alert czymś innym, np. UI powiadomieniem
+      router.push("/"); // Powrót do strony głównej
+    } else {
+      alert("Błąd podczas rozpoczynania okresu próbnego.");
+    }
+  };
 
   const handleSubscribe = async () => {
     setLoading(true);
@@ -122,11 +148,18 @@ export default function SubscriptionPage() {
           </li>
         </ul>
         <button
-          onClick={handleSubscribe}
+          onClick={startTrial}
           disabled={loading}
           className="inline-block w-full py-3 px-4 mb-4 text-white bg-[#FFA303] hover:bg-[#F76201] rounded-lg font-semibold transition duration-200"
         >
           {loading ? "Loading..." : "Start Your 5-Day Free Trial"}
+        </button>
+        <button
+          onClick={handleSubscribe}
+          disabled={loading}
+          className="inline-block w-full py-3 px-4 mb-4 text-white bg-[#FFA303] hover:bg-[#F76201] rounded-lg font-semibold transition duration-200"
+        >
+          {loading ? "Loading..." : "Subscribe Now"}
         </button>
         <button
           onClick={() => signOut()}

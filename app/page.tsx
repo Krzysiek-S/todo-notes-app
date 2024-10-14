@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { motion } from "framer-motion";
 import { Button } from "@/app/ui/button";
 import { Shiba } from "@/app/ui/shiba";
 import { Main } from "./ui/components/main";
+import { useRouter } from "next/router";
 import styles from "./ui/components/todos/styles.module.css";
 import SubscriptionPage from "./subscription/page";
 import SubscriptionControls from "./ui/components/SubscriptionControls";
@@ -33,18 +34,39 @@ export default function Page() {
     shiba1: null,
     shiba2: null,
   });
+  const router = useRouter();
 
   // Pobranie statusu subskrypcji z backendu
   useEffect(() => {
     async function fetchSubscriptionStatus() {
-      const res = await fetch("/api/subscription/status");
+      if (!session) return;
+      const res = await fetch("/api/subscription/status", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: session.user.id }),
+      });
       const { isSubscribed, trialEndDate } = await res.json();
       setIsSubscribed(isSubscribed);
-      setTrialEndDate(new Date(trialEndDate));
+      setTrialEndDate(trialEndDate ? new Date(trialEndDate) : null);
     }
 
     fetchSubscriptionStatus();
-  }, []);
+  }, [session]);
+
+  const currentDate = useMemo(() => new Date(), []);
+
+  useEffect(() => {
+    if (
+      session &&
+      !isSubscribed &&
+      trialEndDate &&
+      currentDate > trialEndDate
+    ) {
+      router.push("/subscription"); // Przekierowanie na stronę subskrypcji po zakończeniu okresu próbnego
+    }
+  }, [session, isSubscribed, trialEndDate, currentDate, router]);
 
   useEffect(() => {
     setSounds((prevSounds) => ({
@@ -110,8 +132,6 @@ export default function Page() {
     setIsOn((prevIsOn) => !prevIsOn);
     console.log("SWITCH:", isOn);
   };
-
-  const currentDate = new Date();
 
   return (
     <div
