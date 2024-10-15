@@ -23,14 +23,23 @@ export default function SubscriptionPage() {
       return;
     }
 
+    const trialEndDate = new Date();
+    trialEndDate.setDate(trialEndDate.getDate() + 5);
+
     // Wywołanie API do rozpoczęcia okresu próbnego bez przekierowania do Stripe
-    const res = await fetch("/api/subscription/start-trial", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId: session.user.id }),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_NEXTAUTH_VERCEL_URL}/api/subscription/start-trial`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: session.user.id,
+          trialEndDate: trialEndDate.toISOString(),
+        }),
+      }
+    );
 
     if (res.ok) {
       alert("5-dniowy okres próbny rozpoczęty!"); // Możesz zastąpić alert czymś innym, np. UI powiadomieniem

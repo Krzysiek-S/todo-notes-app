@@ -6,9 +6,12 @@ const SubscriptionControls = () => {
   const handleCancelSubscription = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/cancel-subscription", {
-        method: "POST",
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_VERCEL_URL}/api/cancel-subscription`,
+        {
+          method: "POST",
+        }
+      );
 
       if (res.ok) {
         alert("Your subscription has been cancelled.");
