@@ -32,3 +32,30 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unexpected error fetching subscription status' }, { status: 500 });
   }
 }
+
+export async function POST(req: NextRequest) {
+  const session = await getServerSession(AuthOptions);
+  if (!session || !session.user || !session.user.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    const { subscriptionStatus } = await req.json();
+    const supabase = CreateSupabaseClient(session.supabaseAccessToken);
+
+    const { error } = await supabase
+      .from('users')
+      .update({ subscription_status: subscriptionStatus })
+      .eq('id', session.user.id);
+
+    if (error) {
+      console.error('Failed to update subscription status:', error.message);
+      return NextResponse.json({ error: 'Failed to update subscription status' }, { status: 500 });
+    }
+
+    return NextResponse.json({ message: 'Subscription status updated successfully' });
+  } catch (error) {
+    console.error('Unexpected error updating subscription status:', error);
+    return NextResponse.json({ error: 'Unexpected error updating subscription status' }, { status: 500 });
+  }
+}

@@ -43,7 +43,7 @@ export default function SubscriptionPage() {
 
     if (res.ok) {
       alert("5-dniowy okres próbny rozpoczęty!"); // Możesz zastąpić alert czymś innym, np. UI powiadomieniem
-      router.push("/"); // Powrót do strony głównej
+      await router.push("/"); // Powrót do strony głównej
     } else {
       alert("Błąd podczas rozpoczynania okresu próbnego.");
     }
