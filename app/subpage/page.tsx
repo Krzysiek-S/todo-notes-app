@@ -7,7 +7,7 @@ import { Button } from "@/app/ui/button";
 import { Shiba } from "@/app/ui/shiba";
 import { Main } from "../ui/components/main";
 import { useRouter } from "next/navigation";
-import styles from "./ui/components/todos/styles.module.css";
+import styles from "../ui/components/todos/styles.module.css";
 import SubscriptionPage from "../subscription/page";
 import SubscriptionControls from "../ui/components/SubscriptionControls";
 
