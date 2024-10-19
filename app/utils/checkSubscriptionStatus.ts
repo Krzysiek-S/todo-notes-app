@@ -10,6 +10,7 @@ export async function checkSubscriptionStatus(userId: string, supabaseAccessToke
     .select('subscription_status, trial_end_date, subscription_id')
     .eq('id', userId)
     .single();
+    
 
  if (error || !data) {
     console.error('Error fetching subscription details:', error);
@@ -19,7 +20,7 @@ export async function checkSubscriptionStatus(userId: string, supabaseAccessToke
       subscriptionId: null,
     };
   }
-
+  console.log("subscription status: ", data.subscription_status)
   return {
     subscriptionStatus: data.subscription_status,
     trialEndDate: data.trial_end_date,

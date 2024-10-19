@@ -38,11 +38,13 @@ export async function POST(req: NextRequest) {
   const session = await getServerSession(AuthOptions);
   console.log("Received POST request to subscription/status API");
   if (!session || !session.user || !session.user.id) {
+    console.warn("Unauthorized access attempt");
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
     const { subscriptionStatus } = await req.json();
+    console.log("Updating subscription status to:", subscriptionStatus);
     const supabase = CreateSupabaseClient(session.supabaseAccessToken);
 
     const { error } = await supabase
