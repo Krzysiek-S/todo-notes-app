@@ -5,8 +5,9 @@ import { CreateSupabaseClient } from '../../../utils/supabaseClient';
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession(AuthOptions);
-
+  console.log("Received GET request to subscription/status API");
   if (!session || !session.user || !session.user.id) {
+    console.warn("Unauthorized access attempt");
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -17,7 +18,7 @@ export async function GET(req: NextRequest) {
       .select('subscription_status, trial_end_date')
       .eq('id', session.user.id)
       .single();
-
+      console.log("Fetched user subscription data:", data);
     if (error || !data) {
       console.error('Failed to fetch subscription status:', error?.message);
       return NextResponse.json({ error: 'Failed to fetch subscription status' }, { status: 500 });
@@ -35,6 +36,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(AuthOptions);
+  console.log("Received POST request to subscription/status API");
   if (!session || !session.user || !session.user.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }

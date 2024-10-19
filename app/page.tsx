@@ -40,16 +40,23 @@ export default function Page() {
   useEffect(() => {
     async function fetchSubscriptionStatus() {
       if (!session) return;
-      const res = await fetch("/api/subscription/status", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: session.user.id }),
-      });
-      const { isSubscribed, trialEndDate } = await res.json();
-      setIsSubscribed(isSubscribed);
-      setTrialEndDate(trialEndDate ? new Date(trialEndDate) : null);
+      try {
+        const res = await fetch("/api/subscription/status", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId: session.user.id }),
+        });
+
+        const { isSubscribed, trialEndDate } = await res.json();
+        setIsSubscribed(isSubscribed);
+        setTrialEndDate(trialEndDate ? new Date(trialEndDate) : null);
+
+        console.log("Subscription status:", { isSubscribed, trialEndDate });
+      } catch (error) {
+        console.log("Failed to fetch subscription status:", error);
+      }
     }
 
     fetchSubscriptionStatus();
@@ -64,6 +71,7 @@ export default function Page() {
       trialEndDate &&
       currentDate > trialEndDate
     ) {
+      console.log("Trial ended, redirecting to subscription page.");
       router.push("/subscription"); // Przekierowanie na stronę subskrypcji po zakończeniu okresu próbnego
     }
   }, [session, isSubscribed, trialEndDate, currentDate, router]);

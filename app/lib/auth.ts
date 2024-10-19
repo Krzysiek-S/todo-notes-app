@@ -38,6 +38,8 @@ export const AuthOptions: NextAuthOptions = {
             session.supabaseAccessToken
           );
 
+          console.log("Fetched subscription status:", { subscriptionStatus, trialEndDate, subscriptionId });
+
           session.user.subscription_status = subscriptionStatus || 'inactive';
           session.user.trialEndDate = trialEndDate || null; // Upewnij się, że jest to w formacie Date lub null
         session.user.subscriptionId = subscriptionId || null; 

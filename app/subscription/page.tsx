@@ -18,6 +18,7 @@ export default function SubscriptionPage() {
   const router = useRouter();
 
   const startTrial = async () => {
+    console.log("Start trial clicked");
     if (!session) {
       signIn(); // Najpierw zaloguj użytkownika, jeśli nie jest zalogowany
       return;
@@ -25,21 +26,19 @@ export default function SubscriptionPage() {
 
     const trialEndDate = new Date();
     trialEndDate.setDate(trialEndDate.getDate() + 5);
+    console.log("Trial end date set to:", trialEndDate);
 
     // Wywołanie API do rozpoczęcia okresu próbnego bez przekierowania do Stripe
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_NEXTAUTH_VERCEL_URL}/api/subscription/start-trial`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: session.user.id,
-          trialEndDate: trialEndDate.toISOString(),
-        }),
-      }
-    );
+    const res = await fetch(`api/subscription/start-trial`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: session.user.id,
+        trialEndDate: trialEndDate.toISOString(),
+      }),
+    });
 
     if (res.ok) {
       alert("5-dniowy okres próbny rozpoczęty!"); // Możesz zastąpić alert czymś innym, np. UI powiadomieniem
@@ -62,18 +61,15 @@ export default function SubscriptionPage() {
       }
 
       // Tworzenie sesji Checkout z ustawionym okresem próbnym w planie
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_VERCEL_URL}/api/subscription`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            priceId: PRICE_ID,
-          }),
-        }
-      );
+      const res = await fetch(`api/subscription`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          priceId: PRICE_ID,
+        }),
+      });
 
       if (!res.ok) {
         const errorResponse = await res.json();

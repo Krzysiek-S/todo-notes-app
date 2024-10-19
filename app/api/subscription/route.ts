@@ -7,13 +7,18 @@ import { CreateSupabaseClient } from '../../utils/supabaseClient';
 export async function POST(req: NextRequest) {
   const session = await getServerSession(AuthOptions);
 
+  console.log("Received POST request to subscription API");
+
   if (!session || !session.user || !session.user.id) {
+    console.warn("Unauthorized access attempt");
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const { priceId, action } = await req.json();
+  console.log("Request body:", { priceId, action });
 
   if (!priceId && action !== 'cancel') {
+    console.error("Missing price ID");
     return NextResponse.json({ error: 'Missing price ID' }, { status: 400 });
   }
 
@@ -26,7 +31,7 @@ export async function POST(req: NextRequest) {
       .select('stripecustomerid, subscription_id')
       .eq('id', session.user.id)
       .single();
-     
+      console.log('Fetched user data:', user);
     console.log('COŚTAM:', user?.stripecustomerid)
     if (userError) {
       console.error('Error fetching user:', userError.message);
@@ -57,6 +62,7 @@ export async function POST(req: NextRequest) {
 
     if (action === 'cancel') {
       if (!user.subscription_id) {
+        console.warn("No active subscription found");
         return NextResponse.json({ error: 'No active subscription found' }, { status: 400 });
       }
 
@@ -64,7 +70,7 @@ export async function POST(req: NextRequest) {
       await stripe.subscriptions.update(user.subscription_id, {
         cancel_at_period_end: true,  // Anuluje subskrypcję po zakończeniu okresu rozliczeniowego
       });
-
+      console.log("Subscription marked to cancel at the end of the period");
       // Aktualizacja statusu subskrypcji w bazie danych
       await supabase
         .from('users')
@@ -95,7 +101,7 @@ export async function POST(req: NextRequest) {
       success_url: `${process.env.NEXT_PUBLIC_NEXTAUTH_VERCEL_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_NEXTAUTH_VERCEL_URL}/cancel`,
     });
-
+    console.log("Created Stripe checkout session:", checkoutSession.id);
     return NextResponse.json({ sessionId: checkoutSession.id });
   } catch (err) {
     console.error('Error creating checkout session:', err);
