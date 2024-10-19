@@ -3,21 +3,41 @@ import { getSession } from "next-auth/react";
 import { checkSubscriptionStatus } from "./checkSubscriptionStatus";
 
 export async function fetchSubscriptionStatus() {
-  const session = await getSession();
+  try {
+    const session = await getSession();
 
-  // Upewnij się, że token istnieje
-  const supabaseAccessToken = session?.supabaseAccessToken;
-  const userId = session?.user.id;
+    // Upewnij się, że sesja istnieje
+    if (!session) {
+      console.error("Brak sesji użytkownika.");
+      return {
+        subscriptionStatus: "inactive",
+        trialEndDate: null,
+        subscriptionId: null,
+      };
+    }
 
-  if (!supabaseAccessToken || !userId) {
-    console.error("Supabase access token or user ID is missing.");
+    const { supabaseAccessToken, user } = session;
+    const userId = user?.id;
+
+    // Upewnij się, że token i userId istnieją
+    if (!supabaseAccessToken || !userId) {
+      console.error("Supabase access token lub user ID jest brakujący.");
+      return {
+        subscriptionStatus: "inactive",
+        trialEndDate: null,
+        subscriptionId: null,
+      };
+    }
+
+    // Wywołaj checkSubscriptionStatus z poprawnymi argumentami
+    return await checkSubscriptionStatus(userId, supabaseAccessToken);
+
+  } catch (error) {
+    console.error("Błąd podczas pobierania statusu subskrypcji:", error);
     return {
       subscriptionStatus: "inactive",
       trialEndDate: null,
       subscriptionId: null,
     };
   }
-
-  // Wywołaj checkSubscriptionStatus z poprawnymi argumentami
-  return await checkSubscriptionStatus(userId, supabaseAccessToken);
 }
