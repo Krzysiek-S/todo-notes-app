@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     // Zapisanie daty zakończenia okresu próbnego w bazie danych
     const { data, error } = await supabase
       .from("users")
-      .update({ trial_end_date: trialEndDate })
+      .update({ trial_end_date: trialEndDate, subscription_status: 'trial'})
       .eq("id", userId);
 
     if (error) {
