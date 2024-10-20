@@ -60,7 +60,7 @@ export default function Page() {
     }
 
     fetchSubscriptionStatus();
-  }, [session]);
+  }, [session, isSubscribed]);
 
   const currentDate = useMemo(() => new Date(), []);
 
