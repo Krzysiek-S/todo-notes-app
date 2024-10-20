@@ -16,9 +16,9 @@ interface SubscriptionPageProps {
 
 const PRICE_ID = "price_1PrQfoHB4zYbZOwNYiBOi7i6"; // Twój price_id z okresami próbnymi ustawionymi w Stripe
 
-export default function SubscriptionPage({
+const SubscriptionPage: React.FC<SubscriptionPageProps> = ({
   onTrialStart,
-}: SubscriptionPageProps) {
+}) => {
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
@@ -182,4 +182,6 @@ export default function SubscriptionPage({
       </div>
     </div>
   );
-}
+};
+
+export default SubscriptionPage;
