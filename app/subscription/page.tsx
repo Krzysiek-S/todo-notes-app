@@ -37,6 +37,7 @@ export default function SubscriptionPage() {
       body: JSON.stringify({
         userId: session.user.id,
         trialEndDate: trialEndDate.toISOString(),
+        subscriptionStatus: session.user.subscription_status,
       }),
     });
 
