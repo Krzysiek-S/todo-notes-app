@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { motion } from "framer-motion";
 import { Button } from "@/app/ui/button";
@@ -36,31 +42,28 @@ export default function Page() {
   });
   const router = useRouter();
 
+  const fetchSubscriptionStatus = useCallback(async () => {
+    if (!session) return;
+    try {
+      const res = await fetch("/api/subscription/status", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: session.user.id }),
+      });
+      const { isSubscribed, trialEndDate } = await res.json();
+      setIsSubscribed(isSubscribed);
+      setTrialEndDate(trialEndDate ? new Date(trialEndDate) : null);
+      console.log("Subscription status:", { isSubscribed, trialEndDate });
+    } catch (error) {
+      console.log("Failed to fetch subscription status:", error);
+    }
+  }, [session]);
   // Pobranie statusu subskrypcji z backendu
   useEffect(() => {
-    async function fetchSubscriptionStatus() {
-      if (!session) return;
-      try {
-        const res = await fetch("/api/subscription/status", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userId: session.user.id }),
-        });
-
-        const { isSubscribed, trialEndDate } = await res.json();
-        setIsSubscribed(isSubscribed);
-        setTrialEndDate(trialEndDate ? new Date(trialEndDate) : null);
-
-        console.log("Subscription status:", { isSubscribed, trialEndDate });
-      } catch (error) {
-        console.log("Failed to fetch subscription status:", error);
-      }
-    }
-
-    fetchSubscriptionStatus();
-  }, [session, isSubscribed]);
+    fetchSubscriptionStatus(); // Call the function to fetch status
+  }, [session, fetchSubscriptionStatus]);
 
   const currentDate = useMemo(() => new Date(), []);
 
@@ -244,7 +247,7 @@ export default function Page() {
           </>
         ) : (
           <div>
-            <SubscriptionPage />
+            <SubscriptionPage onTrialStart={fetchSubscriptionStatus} />
           </div>
         )
       ) : (

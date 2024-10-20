@@ -10,9 +10,15 @@ const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
 
+interface SubscriptionPageProps {
+  onTrialStart: () => Promise<void>; // Typ dla onTrialStart
+}
+
 const PRICE_ID = "price_1PrQfoHB4zYbZOwNYiBOi7i6"; // Twój price_id z okresami próbnymi ustawionymi w Stripe
 
-export default function SubscriptionPage() {
+export default function SubscriptionPage({
+  onTrialStart,
+}: SubscriptionPageProps) {
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
@@ -37,12 +43,12 @@ export default function SubscriptionPage() {
       body: JSON.stringify({
         userId: session.user.id,
         trialEndDate: trialEndDate.toISOString(),
-        subscriptionStatus: session.user.subscription_status,
       }),
     });
 
     if (res.ok) {
       alert("5-dniowy okres próbny rozpoczęty!"); // Możesz zastąpić alert czymś innym, np. UI powiadomieniem
+      onTrialStart();
       router.push("/"); // Powrót do strony głównej
     } else {
       alert("Błąd podczas rozpoczynania okresu próbnego.");
