@@ -90,7 +90,3 @@ export interface Todo {
       stripeCustomerId?: string | null;  // Dodaj stripeCustomerId tutaj
     };
   }
-
-  export interface SubscriptionPageProps {
-    onTrialStart: () => Promise<void>; // Typ dla onTrialStart
-  }

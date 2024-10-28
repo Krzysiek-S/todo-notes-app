@@ -5,7 +5,10 @@ import React, { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { signOut, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { SubscriptionPageProps } from "../lib/types";
+
+// interface SubscriptionPageProps {
+//   onTrialStart: () => Promise<void>; // Typ dla onTrialStart
+// }
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
@@ -13,7 +16,7 @@ const stripePromise = loadStripe(
 
 const PRICE_ID = "price_1PrQfoHB4zYbZOwNYiBOi7i6"; // Twój price_id z okresami próbnymi ustawionymi w Stripe
 
-function SubscriptionPage({ onTrialStart }: SubscriptionPageProps) {
+export default function SubscriptionPage({ onTrialStart }: any) {
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
@@ -178,5 +181,3 @@ function SubscriptionPage({ onTrialStart }: SubscriptionPageProps) {
     </div>
   );
 }
-
-export default SubscriptionPage;
