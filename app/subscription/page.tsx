@@ -47,6 +47,7 @@ export default function SubscriptionPage({ onTrialStart }: any) {
     if (res.ok) {
       alert("5-dniowy okres próbny rozpoczęty!"); // Możesz zastąpić alert czymś innym, np. UI powiadomieniem
       onTrialStart();
+      console.log("onTrialStart: ", onTrialStart());
       router.push("/"); // Powrót do strony głównej
     } else {
       alert("Błąd podczas rozpoczynania okresu próbnego.");

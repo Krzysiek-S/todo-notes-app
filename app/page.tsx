@@ -25,7 +25,7 @@ export default function Page() {
   const [isKanban, setIsKanban] = useState(false);
   const [activeComponent, setActiveComponent] = useState("Todos");
   const [isOn, setIsOn] = useState(false);
-  const [isSubscribed, setIsSubscribed] = useState(undefined);
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const [trialEndDate, setTrialEndDate] = useState<Date | null>(null); // Dodana zmienna stanu do sprawdzania subskrypcji
   const [sounds, setSounds] = useState<{
     lampTurn: HTMLAudioElement | null;
