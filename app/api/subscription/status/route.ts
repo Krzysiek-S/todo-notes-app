@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     const { data, error } = await supabase
       .from('users')
       .select('subscription_status, trial_end_date')
-      .eq('user_id', session.user.id)
+      .eq('id', session.user.id)
       .single();
       console.log("Fetched user subscription data:", data);
     if (error || !data) {
