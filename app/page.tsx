@@ -53,9 +53,13 @@ export default function Page() {
         body: JSON.stringify({ userId: session.user.id }),
       });
       const { isSubscribed, trialEndDate } = await res.json();
+      console.log("Subscription status from API:", {
+        isSubscribed,
+        trialEndDate,
+      });
       setIsSubscribed(isSubscribed);
       setTrialEndDate(trialEndDate ? new Date(trialEndDate) : null);
-      console.log("Subscription status:", { isSubscribed, trialEndDate });
+      console.log("Updated state:", { isSubscribed, trialEndDate });
     } catch (error) {
       console.log("Failed to fetch subscription status:", error);
     }

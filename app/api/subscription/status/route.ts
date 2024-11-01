@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch subscription status' }, { status: 500 });
     }
 
-    const isSubscribed = data.subscription_status === 'active';
+    const isSubscribed = data.subscription_status;
     const trialEndDate = data.trial_end_date || null;
     console.log('is subscribed', isSubscribed)
     return NextResponse.json({ isSubscribed, trialEndDate });
