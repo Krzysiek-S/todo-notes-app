@@ -1,7 +1,7 @@
 // subscription/page.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { signOut, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -18,10 +18,6 @@ const PRICE_ID = "price_1PrQfoHB4zYbZOwNYiBOi7i6"; // Twój price_id z okresami 
 
 export default function SubscriptionPage({ onTrialStart }: any) {
   const [loading, setLoading] = useState(false);
-  const [subscriptionStatus, setSubscriptionStatus] = useState({
-    isSubscribed: undefined,
-    trialEndDate: undefined,
-  });
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -50,43 +46,12 @@ export default function SubscriptionPage({ onTrialStart }: any) {
 
     if (res.ok) {
       alert("5-dniowy okres próbny rozpoczęty!"); // Możesz zastąpić alert czymś innym, np. UI powiadomieniem
-      await updateSubscriptionStatus();
-      console.log("onTrialStart: ", onTrialStart);
+      onTrialStart();
       router.push("/"); // Powrót do strony głównej
     } else {
       alert("Błąd podczas rozpoczynania okresu próbnego.");
     }
   };
-
-  async function fetchSubscriptionStatus(userId: string) {
-    const res = await fetch(`/api/subscription/status`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId }),
-    });
-
-    if (res.ok) {
-      return res.json();
-    } else {
-      console.error("Failed to fetch subscription status");
-      return { isSubscribed: undefined, trialEndDate: undefined };
-    }
-  }
-
-  const updateSubscriptionStatus = async () => {
-    if (session && session.user) {
-      const status = await fetchSubscriptionStatus(session.user.id);
-      setSubscriptionStatus(status); // Ustawienie statusu
-    }
-  };
-
-  useEffect(() => {
-    if (session) {
-      updateSubscriptionStatus(); // Pobierz status przy załadowaniu komponentu
-    }
-  }, [session]);
 
   const handleSubscribe = async () => {
     setLoading(true);

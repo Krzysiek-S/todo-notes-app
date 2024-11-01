@@ -46,11 +46,10 @@ export default function Page() {
     if (!session) return;
     try {
       const res = await fetch("/api/subscription/status", {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId: session.user.id }),
       });
       const { isSubscribed, trialEndDate } = await res.json();
       console.log("Subscription status from API:", {
