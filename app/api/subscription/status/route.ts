@@ -10,13 +10,13 @@ export async function GET(req: NextRequest) {
     console.warn("Unauthorized access attempt");
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-
+  const { userId, trialEndDate } = await req.json();
   try {
     const supabase = CreateSupabaseClient(session.supabaseAccessToken);
     const { data, error } = await supabase
       .from('users')
       .select('subscription_status, trial_end_date')
-      .eq('id', session.user.id)
+      .eq('id', userId)
       .single();
       console.log("Fetched user subscription data:", data);
     if (error || !data) {
@@ -25,9 +25,9 @@ export async function GET(req: NextRequest) {
     }
 
     const isSubscribed = data.subscription_status === 'active';
-    const trialEndDate = data.trial_end_date || null;
+    const trialEndDateStatus = trialEndDate || null;
     console.log('is subscribed', isSubscribed)
-    return NextResponse.json({ isSubscribed, trialEndDate });
+    return NextResponse.json({ isSubscribed, trialEndDateStatus });
   } catch (error) {
     console.error('Unexpected error fetching subscription status:', error);
     return NextResponse.json({ error: 'Unexpected error fetching subscription status' }, { status: 500 });
