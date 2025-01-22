@@ -25,7 +25,10 @@ LayoutProps) {
   return (
     <ClientLayout>
       <html lang="en">
-        <head />
+        <head>
+          <link rel="manifest" href="/manifest.json" />
+          <meta name="theme-color" content="#FFA384" />
+        </head>
         <body>{children}</body>
       </html>
     </ClientLayout>
