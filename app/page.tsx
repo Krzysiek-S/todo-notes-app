@@ -271,7 +271,10 @@ export default function Page() {
           </>
         ) : (
           <div>
-            <SubscriptionPage onTrialStart={fetchSubscriptionStatus} />
+            <SubscriptionPage
+              onTrialStart={fetchSubscriptionStatus}
+              trialEndDate={trialEndDate}
+            />
           </div>
         )
       ) : (

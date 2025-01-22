@@ -1,7 +1,7 @@
 // subscription/page.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { signOut, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -16,10 +16,14 @@ const stripePromise = loadStripe(
 
 const PRICE_ID = "price_1PrQfoHB4zYbZOwNYiBOi7i6"; // Twój price_id z okresami próbnymi ustawionymi w Stripe
 
-export default function SubscriptionPage({ onTrialStart }: any) {
+export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
+
+  useEffect(() => {
+    onTrialStart();
+  }, [session, onTrialStart]);
 
   const startTrial = async () => {
     console.log("Start trial clicked");
@@ -104,7 +108,7 @@ export default function SubscriptionPage({ onTrialStart }: any) {
       setLoading(false);
     }
   };
-
+  const currentDate = new Date();
   return (
     <div className="min-h-screen bg-gradient-to-r bg-[#FFE0AE] flex flex-col items-center justify-center p-6">
       <div className="bg-[#ffebca] rounded-lg shadow-lg p-8 max-w-lg w-full text-center">
@@ -157,13 +161,15 @@ export default function SubscriptionPage({ onTrialStart }: any) {
             <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
           </li>
         </ul>
-        <button
-          onClick={startTrial}
-          disabled={loading}
-          className="inline-block w-full py-3 px-4 mb-4 text-white bg-[#FFA303] hover:bg-[#F76201] rounded-lg font-semibold transition duration-200"
-        >
-          {loading ? "Loading..." : "Start Your 5-Day Free Trial"}
-        </button>
+        {trialEndDate && currentDate > trialEndDate ? null : (
+          <button
+            onClick={startTrial}
+            disabled={loading}
+            className="inline-block w-full py-3 px-4 mb-4 text-white bg-[#FFA303] hover:bg-[#F76201] rounded-lg font-semibold transition duration-200"
+          >
+            {loading ? "Loading..." : "Start Your 5-Day Free Trial"}
+          </button>
+        )}
         <button
           onClick={handleSubscribe}
           disabled={loading}
