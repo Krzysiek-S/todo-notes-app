@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     }
 
     const isSubscribed = data.subscription_status === 'active';
-    const trialEndDate = data.trial_end_date || null;
+    const trialEndDate = data.trial_end_date;
     console.log('is subscribed', isSubscribed)
     return NextResponse.json({ isSubscribed, trialEndDate });
   } catch (error) {
