@@ -27,9 +27,9 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
       return;
     }
 
-    const trialEndDate = new Date();
-    trialEndDate.setDate(trialEndDate.getDate() + 5);
-    console.log("Trial end date set to:", trialEndDate);
+    // const trialEndDate = new Date();
+    // trialEndDate.setDate(trialEndDate.getDate() + 5);
+    // console.log("Trial end date set to:", trialEndDate);
 
     // Wywołanie API do rozpoczęcia okresu próbnego bez przekierowania do Stripe
     const res = await fetch(`api/subscription/start-trial`, {
