@@ -16,7 +16,7 @@ const stripePromise = loadStripe(
 
 const PRICE_ID = "price_1PrQfoHB4zYbZOwNYiBOi7i6"; // Twój price_id z okresami próbnymi ustawionymi w Stripe
 
-export default function SubscriptionPage({ onTrialStart }: any) {
+export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
@@ -161,23 +161,23 @@ export default function SubscriptionPage({ onTrialStart }: any) {
             <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
           </li>
         </ul>
-
-        <button
-          onClick={startTrial}
-          disabled={loading}
-          className="hidden w-full py-3 px-4 mb-4 text-white bg-[#FFA303] hover:bg-[#F76201] rounded-lg font-semibold transition duration-200"
-        >
-          {loading ? "Loading..." : "Start Your 5-Day Free Trial"}
-        </button>
-
-        <button
-          onClick={startTrial}
-          disabled={loading}
-          className="inline-block w-full py-3 px-4 mb-4 text-white bg-[#FFA303] hover:bg-[#F76201] rounded-lg font-semibold transition duration-200"
-        >
-          {loading ? "Loading..." : "Start Your 5-Day Free Trial"}
-        </button>
-
+        {trialEndDate && currentDate > trialEndDate ? (
+          <button
+            onClick={startTrial}
+            disabled={loading}
+            className="inline-block w-full py-3 px-4 mb-4 text-white bg-[#FFA303] hover:bg-[#F76201] rounded-lg font-semibold transition duration-200"
+          >
+            {loading ? "Loading..." : "Start Your 5-Day Free Trial"}
+          </button>
+        ) : (
+          <button
+            onClick={startTrial}
+            disabled={loading}
+            className="inline-block w-full py-3 px-4 mb-4 text-white bg-[#FFA303] hover:bg-[#F76201] rounded-lg font-semibold transition duration-200"
+          >
+            {loading ? "Loading..." : "Start Your 5-Day Free Trial"}
+          </button>
+        )}
         <button
           onClick={handleSubscribe}
           disabled={loading}
