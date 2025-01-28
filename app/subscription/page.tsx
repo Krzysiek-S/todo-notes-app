@@ -156,7 +156,15 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
             <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
           </li>
         </ul>
-        {trialEndDate && currentDate > trialEndDate ? null : (
+        {trialEndDate && currentDate > trialEndDate ? (
+          <button
+            onClick={startTrial}
+            disabled={loading}
+            className="hidden w-full py-3 px-4 mb-4 text-white bg-[#FFA303] hover:bg-[#F76201] rounded-lg font-semibold transition duration-200"
+          >
+            {loading ? "Loading..." : "Start Your 5-Day Free Trial"}
+          </button>
+        ) : (
           <button
             onClick={startTrial}
             disabled={loading}
