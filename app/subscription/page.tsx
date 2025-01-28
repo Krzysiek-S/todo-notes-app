@@ -1,6 +1,7 @@
+// subscription/page.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { signOut, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -19,6 +20,10 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
+
+  useEffect(() => {
+    onTrialStart();
+  }, [session, onTrialStart]);
 
   const startTrial = async () => {
     console.log("Start trial clicked");
@@ -165,7 +170,6 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
             {loading ? "Loading..." : "Start Your 5-Day Free Trial"}
           </button>
         )}
-
         <button
           onClick={handleSubscribe}
           disabled={loading}
