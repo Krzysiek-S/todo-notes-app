@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { motion } from "framer-motion";
 import { Button } from "@/app/ui/button";
@@ -26,7 +20,7 @@ export default function Page() {
   const [activeComponent, setActiveComponent] = useState("Todos");
   const [isOn, setIsOn] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
-  const [trialEndDate, setTrialEndDate] = useState<Date | null>(null); // Dodana zmienna stanu do sprawdzania subskrypcji
+  const [trialEndDate, setTrialEndDate] = useState<Date | null>(null);
   const [sounds, setSounds] = useState<{
     lampTurn: HTMLAudioElement | null;
     lampTurnOff: HTMLAudioElement | null;
@@ -63,7 +57,7 @@ export default function Page() {
       console.log("Failed to fetch subscription status:", error);
     }
   }, [session]);
-  // Pobranie statusu subskrypcji z backendu
+
   useEffect(() => {
     fetchSubscriptionStatus(); // Call the function to fetch status
   }, [session, fetchSubscriptionStatus]);
@@ -83,25 +77,9 @@ export default function Page() {
       currentDate > trialEndDate
     ) {
       console.log("Trial ended, redirecting to subscription page.");
-      router.push("/subscription"); // Przekierowanie na stronę subskrypcji po zakończeniu okresu próbnego
+      router.push("/subscription"); // Redirect to the subscription page after the trial period ends
     }
   }, [session, isSubscribed, trialEndDate, currentDate, router]);
-
-  useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/service-worker.js")
-        .then((registration) => {
-          console.log(
-            "Service Worker registered with scope:",
-            registration.scope
-          );
-        })
-        .catch((error) => {
-          console.error("Service Worker registration failed:", error);
-        });
-    }
-  }, []);
 
   useEffect(() => {
     setSounds((prevSounds) => ({
@@ -215,7 +193,7 @@ export default function Page() {
                   className={`${
                     isColored ? styles.box4 : styles.box3
                   } relative flex items-center border-[#494544] border-[2px] bg-[#6f6967]
-                w-[45px] h-[15px] rounded-full cursor-pointer`}
+                                w-[45px] h-[15px] rounded-full cursor-pointer`}
                   onClick={handleSwitchLamp}
                 >
                   <input
@@ -271,10 +249,7 @@ export default function Page() {
           </>
         ) : (
           <div>
-            <SubscriptionPage
-              onTrialStart={fetchSubscriptionStatus}
-              trialEndDate={trialEndDate}
-            />
+            <SubscriptionPage onTrialStart={fetchSubscriptionStatus} />
           </div>
         )
       ) : (
