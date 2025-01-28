@@ -11,11 +11,13 @@ const stripePromise = loadStripe(
 
 const PRICE_ID = "price_1PrQfoHB4zYbZOwNYiBOi7i6"; // Twój price_id z okresami próbnymi ustawionymi w Stripe
 
-export default function SubscriptionPage({
+interface SubscriptionPageProps {
+  onTrialStart: () => void; // Typ dla onTrialStart
+}
+
+const SubscriptionPage: React.FC<SubscriptionPageProps> = ({
   onTrialStart,
-}: {
-  onTrialStart: () => void;
-}) {
+}) => {
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -182,7 +184,6 @@ export default function SubscriptionPage({
           </li>
         </ul>
 
-        {/* Warunkowe renderowanie przycisku Start Your 5-Day Free Trial */}
         {trialEndDate && currentDate > trialEndDate ? null : (
           <button
             onClick={startTrial}
@@ -209,4 +210,6 @@ export default function SubscriptionPage({
       </div>
     </div>
   );
-}
+};
+
+export default SubscriptionPage;
