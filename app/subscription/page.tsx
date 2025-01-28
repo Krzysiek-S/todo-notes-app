@@ -156,7 +156,7 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
             <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
           </li>
         </ul>
-        {trialEndDate && trialEndDate > currentDate ? null : (
+        {trialEndDate && currentDate > trialEndDate ? null : (
           <button
             onClick={startTrial}
             disabled={loading}
