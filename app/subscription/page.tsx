@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { signOut, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -19,7 +19,9 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
-
+  useEffect(() => {
+    handleSubscribe();
+  }, [session]);
   const startTrial = async () => {
     console.log("Start trial clicked");
     if (!session) {
