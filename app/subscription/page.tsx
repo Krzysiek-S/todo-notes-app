@@ -16,15 +16,16 @@ export default function SubscriptionPage({ onTrialStart }: any) {
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
-  const { trialEndDate, setTrialEndDate } = useSubscription();
+  const { trialEndDate, fetchSubscriptionStatus, setTrialEndDate } =
+    useSubscription();
 
   useEffect(() => {
-    if (onTrialStart) {
-      onTrialStart();
+    if (fetchSubscriptionStatus) {
+      fetchSubscriptionStatus();
     } else {
       console.warn("onTrialStart is undefined in SubscriptionPage");
     }
-  }, [session, onTrialStart]);
+  }, [fetchSubscriptionStatus]);
 
   const startTrial = async () => {
     if (!session) {

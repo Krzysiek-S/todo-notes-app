@@ -20,14 +20,15 @@ import { useSubscription } from "./context/SubscriptionContext";
 
 export default function Page() {
   const { data: session } = useSession();
-  const { trialEndDate, setTrialEndDate } = useSubscription();
+  const { isSubscribed, trialEndDate, fetchSubscriptionStatus } =
+    useSubscription();
   const [isColored, setColored] = useState(false);
   const [draggingMain, setDraggingMain] = useState(false);
   const [isDashboardChange, setIsDashboardChange] = useState(false);
   const [isKanban, setIsKanban] = useState(false);
   const [activeComponent, setActiveComponent] = useState("Todos");
   const [isOn, setIsOn] = useState(false);
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  // const [isSubscribed, setIsSubscribed] = useState(false);
   // const [trialEndDate, setTrialEndDate] = useState<Date | null>(null); // Dodana zmienna stanu do sprawdzania subskrypcji
   const [sounds, setSounds] = useState<{
     lampTurn: HTMLAudioElement | null;
@@ -44,38 +45,9 @@ export default function Page() {
   });
   const router = useRouter();
 
-  const fetchSubscriptionStatus = useCallback(async () => {
-    if (!session) {
-      console.warn("Brak sesji, nie można pobrać statusu subskrypcji");
-      return;
-    }
-    try {
-      const res = await fetch("/api/subscription/status", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const { isSubscribed, trialEndDate } = await res.json();
-      console.log("Subscription status from API:", {
-        isSubscribed,
-        trialEndDate,
-      });
-      setIsSubscribed(isSubscribed);
-      setTrialEndDate(trialEndDate ? new Date(trialEndDate) : null);
-      console.log("Updated state:", { isSubscribed, trialEndDate });
-    } catch (error) {
-      console.log("Failed to fetch subscription status:", error);
-    }
-  }, [session, setTrialEndDate]);
-  // Pobranie statusu subskrypcji z backendu
   useEffect(() => {
-    fetchSubscriptionStatus(); // Call the function to fetch status
-  }, [session, fetchSubscriptionStatus]);
-  console.log("Przekazywane do SubscriptionPage:", {
-    onTrialStart: fetchSubscriptionStatus,
-    trialEndDate,
-  });
+    fetchSubscriptionStatus();
+  }, [fetchSubscriptionStatus]);
   const currentDate = useMemo(() => new Date(), []);
 
   useEffect(() => {
