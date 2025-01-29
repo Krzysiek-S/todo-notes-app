@@ -63,19 +63,10 @@ export default function Page() {
       console.log("Failed to fetch subscription status:", error);
     }
   }, [session]);
+  const currentDate = useMemo(() => new Date(), []);
   // Pobranie statusu subskrypcji z backendu
   useEffect(() => {
-    fetchSubscriptionStatus(); // Call the function to fetch status
-  }, [session, fetchSubscriptionStatus]);
-
-  const currentDate = useMemo(() => new Date(), []);
-
-  useEffect(() => {
-    console.log("Checking trial end date:", {
-      trialEndDate,
-      currentDate,
-      isSubscribed,
-    });
+    fetchSubscriptionStatus();
     if (
       session &&
       !isSubscribed &&
@@ -84,8 +75,32 @@ export default function Page() {
     ) {
       console.log("Trial ended, redirecting to subscription page.");
       router.push("/subscription"); // Przekierowanie na stronę subskrypcji po zakończeniu okresu próbnego
-    }
-  }, [session, isSubscribed, trialEndDate, currentDate, router]);
+    } // Call the function to fetch status
+  }, [
+    session,
+    isSubscribed,
+    trialEndDate,
+    currentDate,
+    router,
+    fetchSubscriptionStatus,
+  ]);
+
+  // useEffect(() => {
+  //   console.log("Checking trial end date:", {
+  //     trialEndDate,
+  //     currentDate,
+  //     isSubscribed,
+  //   });
+  //   if (
+  //     session &&
+  //     !isSubscribed &&
+  //     trialEndDate &&
+  //     currentDate > trialEndDate
+  //   ) {
+  //     console.log("Trial ended, redirecting to subscription page.");
+  //     router.push("/subscription"); // Przekierowanie na stronę subskrypcji po zakończeniu okresu próbnego
+  //   }
+  // }, [session, isSubscribed, trialEndDate, currentDate, router]);
 
   useEffect(() => {
     if ("serviceWorker" in navigator) {
