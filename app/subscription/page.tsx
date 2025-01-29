@@ -1,13 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { signOut, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-
-// interface SubscriptionPageProps {
-//   onTrialStart: () => Promise<void>; // Typ dla onTrialStart
-// }
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
@@ -15,13 +11,34 @@ const stripePromise = loadStripe(
 
 const PRICE_ID = "price_1PrQfoHB4zYbZOwNYiBOi7i6"; // Twój price_id z okresami próbnymi ustawionymi w Stripe
 
-export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
+export default function SubscriptionPage({ onTrialStart }: any) {
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [trialEndDate, setTrialEndDate] = useState<Date | null>(null);
   const router = useRouter();
-  // useEffect(() => {
-  //   handleSubscribe();
-  // }, [session]);
+
+  const fetchSubscriptionStatus = useCallback(async () => {
+    if (!session) return;
+    try {
+      const res = await fetch("/api/subscription/status", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const { isSubscribed, trialEndDate } = await res.json();
+      setIsSubscribed(isSubscribed);
+      setTrialEndDate(trialEndDate ? new Date(trialEndDate) : null);
+    } catch (error) {
+      console.log("Failed to fetch subscription status:", error);
+    }
+  }, [session]);
+
+  useEffect(() => {
+    fetchSubscriptionStatus();
+  }, [session, fetchSubscriptionStatus]);
+
   const startTrial = async () => {
     console.log("Start trial clicked");
     if (!session) {
@@ -29,9 +46,9 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
       return;
     }
 
-    // const trialEndDate = new Date();
-    // trialEndDate.setDate(trialEndDate.getDate() + 5);
-    // console.log("Trial end date set to:", trialEndDate);
+    const trialEndDate = new Date();
+    trialEndDate.setDate(trialEndDate.getDate() + 5);
+    console.log("Trial end date set to:", trialEndDate);
 
     // Wywołanie API do rozpoczęcia okresu próbnego bez przekierowania do Stripe
     const res = await fetch(`api/subscription/start-trial`, {
@@ -48,7 +65,7 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
     if (res.ok) {
       alert("5-dniowy okres próbny rozpoczęty!"); // Możesz zastąpić alert czymś innym, np. UI powiadomieniem
       onTrialStart();
-      router.push("/"); // Powrót do strony głównej
+      router.push("/"); // Powrót do strony głównej po rozpoczęciu okresu próbnego
     } else {
       alert("Błąd podczas rozpoczynania okresu próbnego.");
     }
@@ -105,7 +122,9 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
       setLoading(false);
     }
   };
+
   const currentDate = new Date();
+
   return (
     <div className="min-h-screen bg-gradient-to-r bg-[#FFE0AE] flex flex-col items-center justify-center p-6">
       <div className="bg-[#ffebca] rounded-lg shadow-lg p-8 max-w-lg w-full text-center">
@@ -158,15 +177,9 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
             <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
           </li>
         </ul>
-        {currentDate > trialEndDate ? (
-          <button
-            onClick={startTrial}
-            disabled={loading}
-            className="hidden w-full py-3 px-4 mb-4 text-white bg-[#FFA303] hover:bg-[#F76201] rounded-lg font-semibold transition duration-200"
-          >
-            {loading ? "Loading..." : "Start Your 5-Day Free Trial"}
-          </button>
-        ) : (
+
+        {/* Warunkowe renderowanie przycisku Start Your 5-Day Free Trial */}
+        {trialEndDate && currentDate > trialEndDate ? null : (
           <button
             onClick={startTrial}
             disabled={loading}
