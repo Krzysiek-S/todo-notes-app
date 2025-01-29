@@ -45,7 +45,7 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
     } else {
       console.warn("onTrialStart is undefined in SubscriptionPage");
     }
-  }, [onTrialStart]);
+  }, [session, onTrialStart]);
 
   const startTrial = async () => {
     console.log("Start trial clicked");
