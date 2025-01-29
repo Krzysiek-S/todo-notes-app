@@ -111,8 +111,50 @@ export default function SubscriptionPage({ onTrialStart }: any) {
         </h1>
         <p className="text-gray-600 mb-6">
           Experience our to-do list app in its full potential with a premium
-          subscription.
+          subscription. Enjoy a smooth, ad-free interface designed for comfort
+          and focus. With your support, we can continue enhancing features, all
+          while keeping things simple and distraction-free.
         </p>
+
+        <ul className="flex flex-col justify-center items-center text-gray-700 mb-8">
+          <li className="mb-2">
+            <div className="flex justify-center items-center">
+              <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
+              <span className="font-semibold mr-2">Ad-Free Experience</span>
+              <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
+            </div>
+            <p>Stay focused with zero interruptions.</p>
+          </li>
+          <div className="border border-gray-400 border-dotted w-[40px] mb-2"></div>
+          <li className="mb-2">
+            <div className="flex justify-center items-center">
+              <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
+              <span className="font-semibold mr-2">Minimalist Design</span>
+              <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
+            </div>
+            <p>
+              A clean, calming layout that lets you concentrate on what matters.
+            </p>
+          </li>
+          <div className="border border-gray-400 border-dotted w-[40px] mb-2"></div>
+          <li className="mb-2">
+            <div className="flex justify-center items-center">
+              <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
+              <span className="font-semibold mr-2">Ongoing Development</span>
+              <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
+            </div>
+            <p>
+              Your subscription fuels future updates and improvements, bringing
+              exciting new features.
+            </p>
+          </li>
+          <div className="border border-gray-400 border-dotted w-[40px] mb-2"></div>
+          <li className="mb-2 flex justify-center items-center">
+            <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
+            <span className="font-semibold mr-2">Priority Support</span>
+            <span className="inline-block w-3 h-3 mr-2 rounded-full bg-[#F76201]"></span>
+          </li>
+        </ul>
 
         {trialEndDate && new Date() > trialEndDate ? null : (
           <button
