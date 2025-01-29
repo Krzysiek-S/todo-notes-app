@@ -64,6 +64,9 @@ export default function Page() {
     }
   }, [session]);
   // Pobranie statusu subskrypcji z backendu
+  useEffect(() => {
+    fetchSubscriptionStatus(); // Call the function to fetch status
+  }, [session, fetchSubscriptionStatus]);
 
   const currentDate = useMemo(() => new Date(), []);
 
@@ -83,10 +86,6 @@ export default function Page() {
       router.push("/subscription"); // Przekierowanie na stronę subskrypcji po zakończeniu okresu próbnego
     }
   }, [session, isSubscribed, trialEndDate, currentDate, router]);
-
-  useEffect(() => {
-    fetchSubscriptionStatus(); // Call the function to fetch status
-  }, [session, fetchSubscriptionStatus]);
 
   useEffect(() => {
     if ("serviceWorker" in navigator) {
