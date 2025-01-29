@@ -94,7 +94,9 @@ export default function Page() {
       router.push("/subscription"); // Przekierowanie na stronę subskrypcji po zakończeniu okresu próbnego
     }
   }, [session, isSubscribed, trialEndDate, currentDate, router]);
-
+  const handleTrialStart = () => {
+    fetchSubscriptionStatus();
+  };
   useEffect(() => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
@@ -280,7 +282,7 @@ export default function Page() {
         ) : (
           <div>
             <SubscriptionPage
-              onTrialStart={fetchSubscriptionStatus}
+              onTrialStart={handleTrialStart}
               trialEndDate={trialEndDate}
             />
           </div>
