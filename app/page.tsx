@@ -269,14 +269,14 @@ export default function Page() {
               />
             </div>
           </>
-        ) : (
+        ) : !isSubscribed && trialEndDate && trialEndDate <= currentDate ? (
           <div>
             <SubscriptionPage
-              onTrialStart={fetchSubscriptionStatus}
+              onTrialStart={() => fetchSubscriptionStatus()}
               trialEndDate={trialEndDate}
             />
           </div>
-        )
+        ) : null
       ) : (
         <div className=" h-[100%] border flex justify-center items-center">
           <motion.button

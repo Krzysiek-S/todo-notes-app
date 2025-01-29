@@ -40,7 +40,12 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
   // }, [session]);
 
   useEffect(() => {
-    if (onTrialStart && typeof onTrialStart === "function") {
+    console.log("Received props in SubscriptionPage:", {
+      onTrialStart,
+      trialEndDate,
+    });
+
+    if (typeof onTrialStart === "function") {
       onTrialStart();
     } else {
       console.error(
@@ -48,7 +53,7 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
         onTrialStart
       );
     }
-  }, [session, onTrialStart]);
+  }, [onTrialStart, trialEndDate]);
 
   const startTrial = async () => {
     console.log("Start trial clicked");
