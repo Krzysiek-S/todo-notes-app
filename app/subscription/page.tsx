@@ -17,6 +17,10 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
   // const [isSubscribed, setIsSubscribed] = useState(false);
   // const [trialEndDate, setTrialEndDate] = useState<Date | null>(null);
   const router = useRouter();
+  console.log("Received props in SubscriptionPage:", {
+    onTrialStart,
+    trialEndDate,
+  });
 
   // const fetchSubscriptionStatus = useCallback(async () => {
   //   if (!session) return;
