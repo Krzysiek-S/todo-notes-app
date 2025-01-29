@@ -89,7 +89,7 @@ export default function Page() {
       currentDate > trialEndDate
     ) {
       console.log("Trial ended, redirecting to subscription page.");
-      router.push("/subscription"); // Przekierowanie na stronę subskrypcji po zakończeniu okresu próbnego
+      router.push(`/subscription?trialEndDate=${trialEndDate?.toISOString()}`); // Przekierowanie na stronę subskrypcji po zakończeniu okresu próbnego
     }
   }, [session, isSubscribed, trialEndDate, currentDate, router]);
 

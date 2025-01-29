@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { signOut, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
@@ -11,16 +12,17 @@ const stripePromise = loadStripe(
 
 const PRICE_ID = "price_1PrQfoHB4zYbZOwNYiBOi7i6"; // Twój price_id z okresami próbnymi ustawionymi w Stripe
 
-export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
+export default function SubscriptionPage({ onTrialStart }: any) {
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
   // const [isSubscribed, setIsSubscribed] = useState(false);
   // const [trialEndDate, setTrialEndDate] = useState<Date | null>(null);
   const router = useRouter();
-  console.log("Received props in SubscriptionPage:", {
-    onTrialStart,
-    trialEndDate,
-  });
+
+  const searchParams = useSearchParams();
+  const trialEndDate = searchParams.get("trialEndDate")
+    ? new Date(searchParams.get("trialEndDate") as string)
+    : null;
 
   // const fetchSubscriptionStatus = useCallback(async () => {
   //   if (!session) return;
