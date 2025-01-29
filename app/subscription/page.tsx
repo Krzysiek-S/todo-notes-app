@@ -40,20 +40,12 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
   // }, [session]);
 
   useEffect(() => {
-    console.log("Received props in SubscriptionPage:", {
-      onTrialStart,
-      trialEndDate,
-    });
-
-    if (typeof onTrialStart === "function") {
+    if (onTrialStart) {
       onTrialStart();
     } else {
-      console.error(
-        "onTrialStart is not a function in SubscriptionPage:",
-        onTrialStart
-      );
+      console.warn("onTrialStart is undefined in SubscriptionPage");
     }
-  }, [session, onTrialStart, trialEndDate]);
+  }, [onTrialStart]);
 
   const startTrial = async () => {
     console.log("Start trial clicked");

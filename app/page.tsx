@@ -43,7 +43,10 @@ export default function Page() {
   const router = useRouter();
 
   const fetchSubscriptionStatus = useCallback(async () => {
-    if (!session) return;
+    if (!session) {
+      console.warn("Brak sesji, nie można pobrać statusu subskrypcji");
+      return;
+    }
     try {
       const res = await fetch("/api/subscription/status", {
         method: "GET",
@@ -67,7 +70,10 @@ export default function Page() {
   useEffect(() => {
     fetchSubscriptionStatus(); // Call the function to fetch status
   }, [session, fetchSubscriptionStatus]);
-
+  console.log("Przekazywane do SubscriptionPage:", {
+    onTrialStart: fetchSubscriptionStatus,
+    trialEndDate,
+  });
   const currentDate = useMemo(() => new Date(), []);
 
   useEffect(() => {
@@ -269,14 +275,14 @@ export default function Page() {
               />
             </div>
           </>
-        ) : !isSubscribed && trialEndDate && trialEndDate <= currentDate ? (
+        ) : (
           <div>
             <SubscriptionPage
-              onTrialStart={() => fetchSubscriptionStatus()}
+              onTrialStart={fetchSubscriptionStatus}
               trialEndDate={trialEndDate}
             />
           </div>
-        ) : null
+        )
       ) : (
         <div className=" h-[100%] border flex justify-center items-center">
           <motion.button
