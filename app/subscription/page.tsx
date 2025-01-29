@@ -11,16 +11,33 @@ const stripePromise = loadStripe(
 
 const PRICE_ID = "price_1PrQfoHB4zYbZOwNYiBOi7i6"; // Twój price_id z okresami próbnymi ustawionymi w Stripe
 
-export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
+export default function SubscriptionPage({ onTrialStart }: any) {
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
   const [isSubscribed, setIsSubscribed] = useState(false);
-  // const [trialEndDate, setTrialEndDate] = useState<Date | null>(null);
+  const [trialEndDate, setTrialEndDate] = useState<Date | null>(null);
   const router = useRouter();
 
+  const fetchSubscriptionStatus = useCallback(async () => {
+    if (!session) return;
+    try {
+      const res = await fetch("/api/subscription/status", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const { isSubscribed, trialEndDate } = await res.json();
+      setIsSubscribed(isSubscribed);
+      setTrialEndDate(trialEndDate ? new Date(trialEndDate) : null);
+    } catch (error) {
+      console.log("Failed to fetch subscription status:", error);
+    }
+  }, [session]);
+
   useEffect(() => {
-    onTrialStart();
-  }, [session, onTrialStart]);
+    fetchSubscriptionStatus();
+  }, [session, fetchSubscriptionStatus]);
 
   const startTrial = async () => {
     console.log("Start trial clicked");
@@ -29,9 +46,9 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
       return;
     }
 
-    // const trialEndDate = new Date();
-    // trialEndDate.setDate(trialEndDate.getDate() + 5);
-    // console.log("Trial end date set to:", trialEndDate);
+    const trialEndDate = new Date();
+    trialEndDate.setDate(trialEndDate.getDate() + 5);
+    console.log("Trial end date set to:", trialEndDate);
 
     // Wywołanie API do rozpoczęcia okresu próbnego bez przekierowania do Stripe
     const res = await fetch(`api/subscription/start-trial`, {
@@ -162,7 +179,7 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
         </ul>
 
         {/* Warunkowe renderowanie przycisku Start Your 5-Day Free Trial */}
-        {onTrialStart ? null : (
+        {trialEndDate && currentDate > trialEndDate ? null : (
           <button
             onClick={startTrial}
             disabled={loading}
