@@ -34,32 +34,32 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// export async function POST(req: NextRequest) {
-//   const session = await getServerSession(AuthOptions);
-//   console.log("Received POST request to subscription/status API");
-//   if (!session || !session.user || !session.user.id) {
-//     console.warn("Unauthorized access attempt");
-//     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-//   }
+export async function POST(req: NextRequest) {
+  const session = await getServerSession(AuthOptions);
+  console.log("Received POST request to subscription/status API");
+  if (!session || !session.user || !session.user.id) {
+    console.warn("Unauthorized access attempt");
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
-//   try {
-//     const { subscriptionStatus } = await req.json();
-//     console.log("Updating subscription status to:", subscriptionStatus);
-//     const supabase = CreateSupabaseClient(session.supabaseAccessToken);
+  try {
+    const { subscriptionStatus } = await req.json();
+    console.log("Updating subscription status to:", subscriptionStatus);
+    const supabase = CreateSupabaseClient(session.supabaseAccessToken);
 
-//     const { error } = await supabase
-//       .from('users')
-//       .update({ subscription_status: subscriptionStatus })
-//       .eq('id', session.user.id);
+    const { error } = await supabase
+      .from('users')
+      .update({ subscription_status: subscriptionStatus })
+      .eq('id', session.user.id);
 
-//     if (error) {
-//       console.error('Failed to update subscription status:', error.message);
-//       return NextResponse.json({ error: 'Failed to update subscription status' }, { status: 500 });
-//     }
+    if (error) {
+      console.error('Failed to update subscription status:', error.message);
+      return NextResponse.json({ error: 'Failed to update subscription status' }, { status: 500 });
+    }
 
-//     return NextResponse.json({ message: 'Subscription status updated successfully' });
-//   } catch (error) {
-//     console.error('Unexpected error updating subscription status:', error);
-//     return NextResponse.json({ error: 'Unexpected error updating subscription status' }, { status: 500 });
-//   }
-// }
+    return NextResponse.json({ message: 'Subscription status updated successfully' });
+  } catch (error) {
+    console.error('Unexpected error updating subscription status:', error);
+    return NextResponse.json({ error: 'Unexpected error updating subscription status' }, { status: 500 });
+  }
+}
