@@ -16,9 +16,11 @@ import { useRouter } from "next/navigation";
 import styles from "./ui/components/todos/styles.module.css";
 import SubscriptionPage from "./subscription/page";
 import SubscriptionControls from "./ui/components/SubscriptionControls";
+import { useSubscription } from "./context/SubscriptionContext";
 
 export default function Page() {
   const { data: session } = useSession();
+  const { trialEndDate, setTrialEndDate } = useSubscription();
   const [isColored, setColored] = useState(false);
   const [draggingMain, setDraggingMain] = useState(false);
   const [isDashboardChange, setIsDashboardChange] = useState(false);
@@ -26,7 +28,7 @@ export default function Page() {
   const [activeComponent, setActiveComponent] = useState("Todos");
   const [isOn, setIsOn] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
-  const [trialEndDate, setTrialEndDate] = useState<Date | null>(null); // Dodana zmienna stanu do sprawdzania subskrypcji
+  // const [trialEndDate, setTrialEndDate] = useState<Date | null>(null); // Dodana zmienna stanu do sprawdzania subskrypcji
   const [sounds, setSounds] = useState<{
     lampTurn: HTMLAudioElement | null;
     lampTurnOff: HTMLAudioElement | null;
@@ -65,7 +67,7 @@ export default function Page() {
     } catch (error) {
       console.log("Failed to fetch subscription status:", error);
     }
-  }, [session]);
+  }, [session, setTrialEndDate]);
   // Pobranie statusu subskrypcji z backendu
   useEffect(() => {
     fetchSubscriptionStatus(); // Call the function to fetch status
