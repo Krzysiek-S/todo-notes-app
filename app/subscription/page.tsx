@@ -183,7 +183,7 @@ export default function SubscriptionPage({
         </ul>
 
         {/* Warunkowe renderowanie przycisku Start Your 5-Day Free Trial */}
-        {trialEndDate && currentDate > trialEndDate ? null : (
+        {isSubscribed && trialEndDate && currentDate > trialEndDate ? null : (
           <button
             onClick={startTrial}
             disabled={loading}
