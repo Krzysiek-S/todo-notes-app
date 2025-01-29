@@ -11,11 +11,15 @@ const stripePromise = loadStripe(
 
 const PRICE_ID = "price_1PrQfoHB4zYbZOwNYiBOi7i6"; // Twój price_id z okresami próbnymi ustawionymi w Stripe
 
-export default function SubscriptionPage({ onTrialStart }: any) {
+export default function SubscriptionPage({
+  onTrialStart,
+  isSubscribed,
+  trialEndDate,
+}: any) {
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const [trialEndDate, setTrialEndDate] = useState<Date | null>(null);
+  // const [isSubscribed, setIsSubscribed] = useState(false);
+  // const [trialEndDate, setTrialEndDate] = useState<Date | null>(null);
   const router = useRouter();
 
   // const fetchSubscriptionStatus = useCallback(async () => {
@@ -35,9 +39,9 @@ export default function SubscriptionPage({ onTrialStart }: any) {
   //   }
   // }, [session]);
 
-  useEffect(() => {
-    onTrialStart();
-  }, [session, onTrialStart]);
+  // useEffect(() => {
+  //   onTrialStart();
+  // }, [session, onTrialStart]);
 
   const startTrial = async () => {
     console.log("Start trial clicked");
