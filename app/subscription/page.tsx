@@ -11,11 +11,7 @@ const stripePromise = loadStripe(
 
 const PRICE_ID = "price_1PrQfoHB4zYbZOwNYiBOi7i6"; // Twój price_id z okresami próbnymi ustawionymi w Stripe
 
-export default function SubscriptionPage({
-  onTrialStart,
-  isSubscribed,
-  trialEndDate,
-}: any) {
+export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
   // const [isSubscribed, setIsSubscribed] = useState(false);
@@ -39,9 +35,9 @@ export default function SubscriptionPage({
   //   }
   // }, [session]);
 
-  // useEffect(() => {
-  //   onTrialStart();
-  // }, [session, onTrialStart]);
+  useEffect(() => {
+    onTrialStart();
+  }, [session, onTrialStart]);
 
   const startTrial = async () => {
     console.log("Start trial clicked");
@@ -183,7 +179,7 @@ export default function SubscriptionPage({
         </ul>
 
         {/* Warunkowe renderowanie przycisku Start Your 5-Day Free Trial */}
-        {!isSubscribed && trialEndDate && currentDate > trialEndDate ? null : (
+        {trialEndDate && currentDate > trialEndDate ? null : (
           <button
             onClick={startTrial}
             disabled={loading}

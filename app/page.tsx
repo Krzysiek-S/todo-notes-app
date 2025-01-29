@@ -274,7 +274,6 @@ export default function Page() {
             <SubscriptionPage
               onTrialStart={fetchSubscriptionStatus}
               trialEndDate={trialEndDate}
-              isSubscribed={isSubscribed}
             />
           </div>
         )
