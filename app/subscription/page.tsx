@@ -53,7 +53,7 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
         onTrialStart
       );
     }
-  }, [onTrialStart, trialEndDate]);
+  }, [session, onTrialStart, trialEndDate]);
 
   const startTrial = async () => {
     console.log("Start trial clicked");
