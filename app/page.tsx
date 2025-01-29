@@ -42,32 +42,6 @@ export default function Page() {
   });
   const router = useRouter();
 
-  const fetchSubscriptionStatus = useCallback(async () => {
-    if (!session) return;
-    try {
-      const res = await fetch("/api/subscription/status", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const { isSubscribed, trialEndDate } = await res.json();
-      console.log("Subscription status from API:", {
-        isSubscribed,
-        trialEndDate,
-      });
-      setIsSubscribed(isSubscribed);
-      setTrialEndDate(trialEndDate ? new Date(trialEndDate) : null);
-      console.log("Updated state:", { isSubscribed, trialEndDate });
-    } catch (error) {
-      console.log("Failed to fetch subscription status:", error);
-    }
-  }, [session]);
-  // Pobranie statusu subskrypcji z backendu
-  useEffect(() => {
-    fetchSubscriptionStatus(); // Call the function to fetch status
-  }, [session, fetchSubscriptionStatus]);
-
   const currentDate = useMemo(() => new Date(), []);
 
   useEffect(() => {
@@ -271,10 +245,7 @@ export default function Page() {
           </>
         ) : (
           <div>
-            <SubscriptionPage
-              onTrialStart={fetchSubscriptionStatus}
-              trialEndDate={trialEndDate}
-            />
+            <SubscriptionPage trialEndDate={trialEndDate} />
           </div>
         )
       ) : (
