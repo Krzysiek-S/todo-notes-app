@@ -40,7 +40,14 @@ export default function SubscriptionPage({ onTrialStart, trialEndDate }: any) {
   // }, [session]);
 
   useEffect(() => {
-    onTrialStart();
+    if (onTrialStart && typeof onTrialStart === "function") {
+      onTrialStart();
+    } else {
+      console.error(
+        "onTrialStart is not a function in SubscriptionPage:",
+        onTrialStart
+      );
+    }
   }, [session, onTrialStart]);
 
   const startTrial = async () => {
